@@ -1,6 +1,7 @@
 import random as rd
 import json
 import tkinter
+import Cards
 
 class Lobby:
     def __init__(self):
@@ -21,10 +22,4 @@ class BlackJack:
 
 
 
-class Deck:
-    def __init__(self):
-        self.suits = ["H", "D", "S", "C"]           # Hearts, Diamonds, Spades, Clubs
-        self.deck - []
 
-    def Shuffle(self):
-        for suit in self.suits:
