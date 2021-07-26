@@ -7,15 +7,12 @@ class Deck:
         self.deck = []
         for suit in range(4):
             for value in range(2, 15):
-                self.deck.append([value, self.suits[suit]])
+                self.deck.append([self.valueToRank(value), self.suits[suit]])
         self.deck = self.shuffleDeck(self.deck)
         self.revealDeck(self.deck)
 
     def shuffleDeck(self, deck):
-        newdeck = []
-        for i in range(53):
-            newdeck[i] = deck[int(r.sample(range(53), 1))]
-        return newdeck
+        return r.sample(deck, 52)  # Using sample() to pick a random card without repetition
 
     def valueToRank(self, value):
         if   value == 11: return 'Jack'
