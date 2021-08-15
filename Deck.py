@@ -7,11 +7,11 @@ class Deck:
         self.deck = []
         for suit in range(4):
             for value in range(2, 15):
-                self.deck.append([self.valueToRank(value), self.suits[suit]])
-        self.deck = self.shuffleDeck(self.deck)
-        self.revealDeck(self.deck)
+                self.deck.append([value, self.suits[suit]])
+        self.deck = self.shuffle(self.deck)
+        #self.revealDeck(self.deck)
 
-    def shuffleDeck(self, deck):
+    def shuffle(self, deck):
         return r.sample(deck, 52)  # Using sample() to pick a random card without repetition
 
     def valueToRank(self, value):
@@ -23,7 +23,20 @@ class Deck:
 
     def revealDeck(self, deck): # Prints out the current deck
         for card in deck:
-            print(f'{card[0]} of {card[1]}')
+            self.printCard(card)
+
+    def printCard(self, card):
+        print(f'{self.valueToRank(card[0])} of {card[1]}')
+
+    def pullRandomCard(self):
+        card = r.choice(self.deck)
+        self.removeCard(self.deck.index(card))
+        return card
+
+    def removeCard(self, cardindex):
+        self.deck.pop(cardindex)
+        return
+
 '''
     def generateShuffledDeck():
         deckindex = 0
