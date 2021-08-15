@@ -1,4 +1,5 @@
 from gameHighestCard import HighestCard
+from gameBlackJack   import BlackJack
 from Deck import Deck
 # interface for all casino games
 class Game:

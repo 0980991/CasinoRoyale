@@ -10,8 +10,8 @@ class HighestCard:
             opponentcard = deck.pullRandomCard()
 
 
-        print(f'Your hand is {deck.valueToRank(playercard[0])} of {playercard[1]}\n')
-        time.sleep(3)
+        input(f'Your hand is {deck.valueToRank(playercard[0])} of {playercard[1]}\n')
+        
         print(f'Your opponent\'s card is {deck.valueToRank(opponentcard[0])} of {opponentcard[1]}\n')
 
         if playercard[0] > opponentcard[0]:
