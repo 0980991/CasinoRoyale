@@ -1,10 +1,11 @@
 import DbAPI
+import InputFunctions as inf
 class Player:
     def __init__(self, playerinfo):
         self.username = playerinfo[0]
         self.credits = playerinfo[1]
         self.winrate = playerinfo[2] # Dictionary with e.g. Blackjack: 0.3
-        DbAPI.establishConnection(f'INSERT INTO playerinfo VALUES ({advisorinfostring})', 'write')
+        DbAPI.establishConnection(f'INSERT INTO playerinfo VALUES ({inf.listToQuery([self.username, str(self.credits)])})', 'write')
 
     def changeCredits(self, amt, changetype):
         if changetype == 'add':

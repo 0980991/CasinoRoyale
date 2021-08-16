@@ -4,8 +4,7 @@ def optionsMenu(options):
     # Output: -1 if the user wants to go back in the menu
     # Makes sure that invalid input gets cancelled
     for i in range(len(options)):
-        print("\t",str(i+1)+".",options[i])
-    print("\t b. Back")
+        print(str(i+1)+".",options[i])
     print("\nPlease make your choice (1 - %s)"% len(options))
     choice = input()
     if choice == "b":
@@ -22,7 +21,7 @@ def yesNoInput(question):
         print('Invalid input please enter Y or N\n')
         userinput = input(question + '(Y/N)\n')
 
-    if userinput == 'Y':
+    if userinput == 'Y' or userinput == 'y':
         return True
     return False
 

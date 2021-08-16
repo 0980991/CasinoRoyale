@@ -6,14 +6,15 @@ def establishConnection(sqlquery, accessmethod):
     cursor = connect.cursor()  # Used to execute SQL commands
     # Run commands:
     # Creates tables if the DB file is created for the first time.
+
     cursor.execute('CREATE TABLE IF NOT EXISTS playerinfo('
-                        'username VARCHAR'
+                        'username VARCHAR,'
                         'credits  INTEGER)')
 
     cursor.execute('CREATE TABLE IF NOT EXISTS playerstats('
-                        'username VARCHAR REFERENCES playerinfo(username)'
+                        'username VARCHAR REFERENCES playerinfo(username),'
                         'highestcard INTEGER,' # Winrate of this game
-                        'blackjack INTEGER'
+                        'blackjack INTEGER,'
                         'largestbetwon VARCHAR)')
 
     # Add Customer Data
