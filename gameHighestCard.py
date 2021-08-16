@@ -23,7 +23,7 @@ class HighestCard:
             results.append(False)
 
         continueYN = input('Do you want to quit?\n')
-        if continueYN == 'Y':
+        if continueYN == 'Y': 
             results.append('quit')
         else:
             results.append('continue')

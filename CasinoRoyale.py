@@ -1,6 +1,7 @@
 import random as rd
 import json
 import tkinter
+import InputFunctions as inf
 from Player import Player
 from Game   import Game
 
@@ -9,7 +10,8 @@ class Lobby:
         self.player = None
 
     def newPlayer(self):
-        self.player = Player([input('Please enter your player name'), 10])
+        username = inf.readUserInput(['Please enter your player name'])
+        self.player = Player([username, 10])
 
 ########### TABLES #############
 class Lounge:
@@ -32,5 +34,5 @@ class Lounge:
     def joinTable(self, gamename):
         Game(self.player, gamename).playTurn()
 
-Lounge().chooseGame()
+#Lounge().chooseGame()
 #Lobby().newPlayer()

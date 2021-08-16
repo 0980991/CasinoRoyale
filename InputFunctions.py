@@ -1,0 +1,63 @@
+def optionsMenu(options):
+    # Input: List of options
+    # Output: Index + 1 of the option that the user selected
+    # Output: -1 if the user wants to go back in the menu
+    # Makes sure that invalid input gets cancelled
+    for i in range(len(options)):
+        print("\t",str(i+1)+".",options[i])
+    print("\t b. Back")
+    print("\nPlease make your choice (1 - %s)"% len(options))
+    choice = input()
+    if choice == "b":
+        return -1
+    while int(choice) not in range(len(options)+1) or int(choice) == 0:
+        print("\nInvalid option. Please try again. (1 - %s)" % len(options))
+        choice = input()
+    return int(choice) - 1
+
+def yesNoInput(question):
+    userinput = input(question + '(Y/N)\n')
+
+    while userinput not in ['Y', 'N', 'y', 'n']:
+        print('Invalid input please enter Y or N\n')
+        userinput = input(question + '(Y/N)\n')
+
+    if userinput == 'Y':
+        return True
+    return False
+
+def readUserInput(questionList):
+    userinput = []
+    for i, question in enumerate(questionList):
+        userinput.append(input('(Press b to cancel)\n\n' + question + '\n')) ## The char escape functie zou hier aangeroepen kunnen worden
+        while userinput[i] == '':
+            print('This field cannot be empty')
+            userinput.pop() # Removes the empty space added to list
+            userinput.append(input('(Press b to cancel)\n\n' + question + '\n'))
+        if userinput[i] == 'b':
+            return []
+    return userinput
+
+def enterToContinue(message):
+    input(message + '\nPlease press enter to continue...')
+
+def pageHeader(text):
+    print(f'*{(len(text)*"=")}*\n|{text}|\n*{(len(text)*"-")}*\n')
+
+def optionsMenuHeader(text):
+    print(f'{text}\n{len(text) * "-"}')
+
+def listToQuery(valuelist):
+    outputstring = '"' # double quotes needed for SQL to accept them als values
+    for i, detail in enumerate(valuelist):
+        if i != len(valuelist)-1:  # Adds  '", "' after every input except for the last
+            outputstring += detail + '", "'
+        else:
+            outputstring += detail + '"'
+    return outputstring
+
+def formatDbRow(row, attributes):
+        outputstring = (20 * '=') + '\n'
+        for i, userattribute in enumerate(row):
+            outputstring += attributes[i] + str(userattribute) + '\n'
+        return outputstring
