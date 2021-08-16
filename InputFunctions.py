@@ -12,7 +12,7 @@ def optionsMenu(options):
     while int(choice) not in range(len(options)+1) or int(choice) == 0:
         print("\nInvalid option. Please try again. (1 - %s)" % len(options))
         choice = input()
-    return int(choice) - 1
+    return int(choice)
 
 def yesNoInput(question):
     userinput = input(question + '(Y/N)\n')
@@ -37,7 +37,7 @@ def readUserInput(questionList):
             return []
     return userinput
 
-def enterToContinue(message):
+def enterToContinue(message=''):
     input(message + '\nPlease press enter to continue...')
 
 def pageHeader(text):
@@ -60,3 +60,9 @@ def formatDbRow(row, attributes):
         for i, userattribute in enumerate(row):
             outputstring += attributes[i] + str(userattribute) + '\n'
         return outputstring
+
+def prettyPrint(msg):
+    print(f'{6*"*"}{(len(msg)*"*")}\n'
+          f'|  {msg}  |\n'
+          f'{6*"*"}{(len(msg)*"*")}\n')
+

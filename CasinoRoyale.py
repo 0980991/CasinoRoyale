@@ -1,7 +1,11 @@
 import random as rd
-import json
-import tkinter
+from sqlite3 import dbapi2
 import InputFunctions as inf
+
+import tkinter
+import DbAPI as db
+
+
 from Player import Player
 from Game   import Game
 
@@ -11,14 +15,20 @@ class Lobby:
 
     def newPlayer(self):
         username = inf.readUserInput(['Please enter your player name'])
-        self.player = Player([''.join(username), 10,[]])
+        self.player = Player([''.join(username), 1300])
 
 ########### TABLES #############
 class Lounge:
     def __init__(self):
+        userinfo = []
         if not inf.yesNoInput('Do you have an existing account?'):
             self.player = Lobby().newPlayer()
+        else:
+            while userinfo == []:
 
+                username = inf.readUserInput(['What is your username?'])
+                userinfo = db.establishConnection(f'SELECT  * FROM playerinfo WHERE username = "{username[0]}"','read')
+            self.player = Player([''.join(userinfo[0][0]), userinfo[0][1]])
         self.chooseGame()
 
     def chooseGame(self):
@@ -27,11 +37,11 @@ class Lounge:
             inf.optionsMenuHeader('What game would you like to play today?')
             choice = inf.optionsMenu(['Highest Card', 'Black Jack', 'Highest dice toss'])
 
-            if choice == '1':
+            if choice == 1:
                 self.joinTable('highestcard')
-            elif choice == '2':
+            elif choice == 2:
                 self.joinTable('blackjack')
-            elif choice == '3':
+            elif choice == 3:
                 self.joinTable('highestdicetoss')
 
     def joinTable(self, gamename):
