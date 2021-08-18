@@ -1,11 +1,11 @@
-def optionsMenu(options):
+def optionsMenu(header, options):
     # Input: List of options
     # Output: Index + 1 of the option that the user selected
     # Output: -1 if the user wants to go back in the menu
     # Makes sure that invalid input gets cancelled
+    optionsMenuHeader(header)
     for i in range(len(options)):
         print(str(i+1)+".",options[i])
-    print("\nPlease make your choice (1 - %s)"% len(options))
     choice = input()
     if choice == "b":
         return -1

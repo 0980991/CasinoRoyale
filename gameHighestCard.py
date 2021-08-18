@@ -1,7 +1,5 @@
-
-from InputFunctions import enterToContinue, prettyPrint
 import InputFunctions as inf
-import time
+
 class HighestCard:
 
     def start(self, deck):
@@ -11,10 +9,11 @@ class HighestCard:
         while playercard[0] is opponentcard[0]:
             opponentcard = deck.pullRandomCard()
 
+        inf.prettyPrint(f'Your hand is {deck.valueToRank(playercard[0])} of {playercard[1]}')
+        inf.enterToContinue()
 
-        inf.enterToContinue(f'Your hand is {deck.valueToRank(playercard[0])} of {playercard[1]}')
-
-        inf.enterToContinue(f'Your opponent\'s card is {deck.valueToRank(opponentcard[0])} of {opponentcard[1]}')
+        inf.prettyPrint(f'Your opponent\'s card is {deck.valueToRank(opponentcard[0])} of {opponentcard[1]}')
+        inf.enterToContinue()
 
         if playercard[0] > opponentcard[0]:
             inf.prettyPrint('You win!')
@@ -23,7 +22,6 @@ class HighestCard:
         else:
             inf.prettyPrint('You lose!')
             results.append(False)
-        inf.enterToContinue()
 
         if not inf.yesNoInput('Do you want to continue?'):
             results.append('quit')

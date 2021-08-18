@@ -8,11 +8,11 @@ class Deck:
         for suit in range(4):
             for value in range(2, 15):
                 self.deck.append([value, self.suits[suit]])
-        self.deck = self.shuffle(self.deck)
+        self.deck = self.shuffle()
         #self.revealDeck(self.deck)
 
-    def shuffle(self, deck):
-        return r.sample(deck, 52)  # Using sample() to pick a random card without repetition
+    def shuffle(self):
+        return r.sample(self.deck, 52)  # Using sample() to pick a random card without repetition
 
     def valueToRank(self, value):
         if   value == 11: return 'Jack'
@@ -21,8 +21,8 @@ class Deck:
         elif value == 14: return 'Ace'
         return value
 
-    def revealDeck(self, deck): # Prints out the current deck
-        for card in deck:
+    def revealDeck(self): # Prints out the current deck
+        for card in self.deck:
             self.printCard(card)
 
     def printCard(self, card):
@@ -32,6 +32,9 @@ class Deck:
         card = r.choice(self.deck)
         self.removeCard(self.deck.index(card))
         return card
+
+    def pull2RandomCards(self):
+        return [self.pullRandomCard(), self.pullRandomCard()]
 
     def removeCard(self, cardindex):
         self.deck.pop(cardindex)

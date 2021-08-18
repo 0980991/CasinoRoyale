@@ -6,11 +6,14 @@ import InputFunctions as inf
 # interface for all casino games
 class Game:
     def __init__(self, player, game):
-        self.deck = Deck()
         self.player = player
         self.currentbet = 0
-        if game == 'highestcard':
+
+        if   game == 'highestcard':
             self.currentgame = HighestCard()
+
+        elif game == 'blackjack':
+            self.currentgame = BlackJack()
 
     def placeBet(self):
         self.currentbet = self.player.getCredits() + 1
@@ -20,17 +23,22 @@ class Game:
 
         inf.enterToContinue('Your bet has been placed')
 
-    def playTurn(self):
-        results = [None, 'continue']
+    def playGame(self):
+        deck = Deck()
+        results = [None, 'continue']  # [Win/Lose, 'continue/'quit']
+
         while results[1] == 'continue':
             self.placeBet()
-            results = self.currentgame.start(self.deck)
+            if len(deck) < 40:
+                deck = Deck()
+            results = self.currentgame.start(deck)
+
             if results[0] is True:
                 addorsubtract = 'add'
             else:
                 addorsubtract = 'subtract'
 
-            self.player.changeCredits(self.currentbet, addorsubtract, self.currentgame)
+            self.player.changeCredits(self.currentbet, addorsubtract)
             self.currentbet = 0
         return
 

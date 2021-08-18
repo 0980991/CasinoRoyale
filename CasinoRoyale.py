@@ -16,6 +16,7 @@ class Lobby:
     def newPlayer(self):
         username = inf.readUserInput(['Please enter your player name'])
         self.player = Player([''.join(username), 1300])
+        return self.player
 
 ########### TABLES #############
 class Lounge:
@@ -34,8 +35,8 @@ class Lounge:
     def chooseGame(self):
         choice = 1
         while choice != 0:
-            inf.optionsMenuHeader('What game would you like to play today?')
-            choice = inf.optionsMenu(['Highest Card', 'Black Jack', 'Highest dice toss'])
+            choice = inf.optionsMenu('What game would you like to play today?',
+                                     ['Highest Card', 'Black Jack', 'Highest dice toss'])
 
             if choice == 1:
                 self.joinTable('highestcard')
@@ -45,6 +46,6 @@ class Lounge:
                 self.joinTable('highestdicetoss')
 
     def joinTable(self, gamename):
-        Game(self.player, gamename).playTurn()
+        Game(self.player, gamename).playGame()
 
 Lounge()
