@@ -5,11 +5,14 @@ class Deck:
     def __init__(self):
         self.suits = ["Hearts", "Diamonds", "Spades", "Clubs"]           # Hearts, Diamonds, Spades, Clubs
         self.deck = []
+        self.fillDeck()
+
+    def fillDeck(self):
         for suit in range(4):
             for value in range(2, 15):
                 self.deck.append([value, self.suits[suit]])
         self.deck = self.shuffle()
-        #self.revealDeck(self.deck)
+
 
     def shuffle(self):
         return r.sample(self.deck, 52)  # Using sample() to pick a random card without repetition
@@ -40,21 +43,29 @@ class Deck:
         self.deck.pop(cardindex)
         return
 
-'''
-    def generateShuffledDeck():
-        deckindex = 0
-        while deckindex < 52:
-            exists = False
-            nextcard =  [self.valueToRank(r.randint(2, 14)), self.suits[r.randint(0, 3)]]
-            for j, card in enumerate(self.deck):
-                if nextcard == card:
-                    exists = True
-                    break
-            if exists is False:
-                self.deck.append(nextcard)
-                print(self.deck[deckindex])
-                deckindex += 1
-        print(len(self.deck))
-'''
+    def sumCards(self, hand):
+            sumcards = 0
+            for card in hand:
+                sumcards += card[0]
+            return sumcards
 
-Deck()
+    def getLength(self):
+        return len(self.deck)
+
+class BlackJackDeck(Deck):
+    def __init__(self):
+        self.fillDeck()
+
+    def fillDeck(self):
+        for suit in range(4):
+            for value in range(2, 15):
+                if value > 10:
+                    self.deck.append([10, self.suits[suit]])
+                else:
+                    self.deck.append([value, self.suits[suit]])
+
+        self.deck = self.shuffle()
+
+
+
+BlackJackDeck().revealDeck()

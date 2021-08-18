@@ -1,6 +1,7 @@
 from gameHighestCard import HighestCard
 from gameBlackJack   import BlackJack
 from Deck import Deck
+from Deck import BlackJackDeck as BJD
 
 import InputFunctions as inf
 # interface for all casino games
@@ -8,12 +9,15 @@ class Game:
     def __init__(self, player, game):
         self.player = player
         self.currentbet = 0
+        self.deck = None
 
         if   game == 'highestcard':
             self.currentgame = HighestCard()
+            self.deck = Deck()
 
         elif game == 'blackjack':
             self.currentgame = BlackJack()
+            self.deck = BJD()
 
     def placeBet(self):
         self.currentbet = self.player.getCredits() + 1
@@ -29,7 +33,7 @@ class Game:
 
         while results[1] == 'continue':
             self.placeBet()
-            if len(deck) < 40:
+            if deck.getLength() < 40:
                 deck = Deck()
             results = self.currentgame.start(deck)
 

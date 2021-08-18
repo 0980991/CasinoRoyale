@@ -1,3 +1,6 @@
+import os
+from Deck import Deck
+
 def optionsMenu(header, options):
     # Input: List of options
     # Output: Index + 1 of the option that the user selected
@@ -14,7 +17,7 @@ def optionsMenu(header, options):
         choice = input()
     return int(choice)
 
-def yesNoInput(question):
+def yesNoInput(question=''):
     userinput = input(question + '(Y/N)\n')
 
     while userinput not in ['Y', 'N', 'y', 'n']:
@@ -66,3 +69,15 @@ def prettyPrint(msg):
           f'|  {msg}  |\n'
           f'{6*"*"}{(len(msg)*"*")}\n')
 
+def playAgain(): # returns a boolean
+    os.system('cls')
+    prettyPrint('Continue?')
+    if yesNoInput():
+        return 'continue'
+    return 'quit'
+
+def printHand(hand): # returns nothing
+    for i in range(len(hand)):
+        prettyPrint(f'{Deck().valueToRank(hand[i][0])} of {hand[i][1]}')
+
+    enterToContinue()
