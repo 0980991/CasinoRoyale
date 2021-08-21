@@ -5,7 +5,7 @@ class Deck:
     def __init__(self):
         self.suits = ["Hearts", "Diamonds", "Spades", "Clubs"]           # Hearts, Diamonds, Spades, Clubs
         self.deck = []
-        self.fillDeck()
+
 
     def fillDeck(self):
         for suit in range(4):
@@ -54,7 +54,7 @@ class Deck:
 
 class BlackJackDeck(Deck):
     def __init__(self):
-        self.fillDeck()
+        super().__init__()
 
     def fillDeck(self):
         for suit in range(4):
@@ -67,5 +67,3 @@ class BlackJackDeck(Deck):
         self.deck = self.shuffle()
 
 
-
-BlackJackDeck().revealDeck()

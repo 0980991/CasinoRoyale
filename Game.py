@@ -14,28 +14,31 @@ class Game:
         if   game == 'highestcard':
             self.currentgame = HighestCard()
             self.deck = Deck()
+            self.deck.fillDeck()
 
         elif game == 'blackjack':
             self.currentgame = BlackJack()
             self.deck = BJD()
-
+            self.deck.fillDeck()
+            print(type(self.deck))
     def placeBet(self):
         self.currentbet = self.player.getCredits() + 1
         while self.currentbet > self.player.getCredits():
-            self.currentbet = int(input('Please enter your bet:\n'
+            try:
+                self.currentbet = int(input('Please enter your bet:\n'
                                        f'Available M-Bucks: {self.player.getCredits()}\n'))
-
+            except ValueError:
+                print('Please enter a value')
         inf.enterToContinue('Your bet has been placed')
 
     def playGame(self):
-        deck = Deck()
         results = [None, 'continue']  # [Win/Lose, 'continue/'quit']
 
         while results[1] == 'continue':
             self.placeBet()
-            if deck.getLength() < 40:
-                deck = Deck()
-            results = self.currentgame.start(deck)
+            if self.deck.getLength() < 40:
+                self.deck = self.deck.fillDeck()
+            results = self.currentgame.start(self.deck)
 
             if results[0] is True:
                 addorsubtract = 'add'

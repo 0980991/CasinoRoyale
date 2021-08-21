@@ -67,9 +67,10 @@ def formatDbRow(row, attributes):
 def prettyPrint(msg):
     print(f'{6*"*"}{(len(msg)*"*")}\n'
           f'|  {msg}  |\n'
-          f'{6*"*"}{(len(msg)*"*")}\n')
+          f'{6*"*"}{(len(msg)*"*")}')
 
 def playAgain(): # returns a boolean
+    enterToContinue()
     os.system('cls')
     prettyPrint('Continue?')
     if yesNoInput():
