@@ -77,8 +77,13 @@ def playAgain(): # returns a boolean
         return 'continue'
     return 'quit'
 
+def handleOutcome(outcome):
+    prettyPrint(outcome[2])
+    return [outcome[0], outcome[1]]
+
 def printHand(hand): # returns nothing
     for i in range(len(hand)):
         prettyPrint(f'{Deck().valueToRank(hand[i][0])} of {hand[i][1]}')
 
     enterToContinue()
+    pass

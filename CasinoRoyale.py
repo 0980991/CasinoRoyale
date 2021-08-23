@@ -32,11 +32,10 @@ class Lounge:
             self.player = Player([''.join(userinfo[0][0]), userinfo[0][1]])
         self.chooseGame()
 
-    def chooseGame(self):
-        choice = 1
+    def chooseGame(self, choice=2):
         while choice != 0:
             choice = inf.optionsMenu('What game would you like to play today?',
-                                     ['Highest Card', 'Black Jack', 'Highest dice toss'])
+                                    ['Highest Card', 'Black Jack', 'Highest dice toss'])
 
             if choice == 1:
                 self.joinTable('highestcard')

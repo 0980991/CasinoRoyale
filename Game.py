@@ -2,7 +2,7 @@ from gameHighestCard import HighestCard
 from gameBlackJack   import BlackJack
 from Deck import Deck
 from Deck import BlackJackDeck as BJD
-
+from Player import Player
 import InputFunctions as inf
 # interface for all casino games
 class Game:
@@ -20,7 +20,7 @@ class Game:
             self.currentgame = BlackJack()
             self.deck = BJD()
             self.deck.fillDeck()
-            print(type(self.deck))
+
     def placeBet(self):
         self.currentbet = self.player.getCredits() + 1
         while self.currentbet > self.player.getCredits():
@@ -42,10 +42,14 @@ class Game:
 
             if results[0] is True:
                 addorsubtract = 'add'
-            else:
+            elif results[0] is False:
                 addorsubtract = 'subtract'
+            else: # Tied game ~ Add 0
+                self.currentbet = 0
+                addorsubtract = 'add'
 
             self.player.changeCredits(self.currentbet, addorsubtract)
             self.currentbet = 0
         return
 
+game = Game(Player([''.join("Test"), 1000]), 'blackjack')

@@ -52,6 +52,14 @@ class Deck:
     def getLength(self):
         return len(self.deck)
 
+    def firstHandGreater(self, hands):
+        if hands[0] > hands[1]:
+            return True
+        elif hands[1] > hands[0]:
+            return False
+        else: return None
+
+
 class BlackJackDeck(Deck):
     def __init__(self):
         super().__init__()
@@ -65,5 +73,3 @@ class BlackJackDeck(Deck):
                     self.deck.append([value, self.suits[suit]])
 
         self.deck = self.shuffle()
-
-

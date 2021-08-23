@@ -1,42 +1,31 @@
 import InputFunctions as inf
 
 class BlackJack:
-    def __init(self)
-        self.deck = None
-        self.gamenotover = True
-        self.roundcount = 1
+    def __init__(self):
+        self.deck        = None
+        self.outcome     = []
+        self.roundcount  = 1
+        self.playerhand  = None
+        self.dealerhand  = None
         self.playerholds = False
-
-        self.playerhand = None
-        self.dealerhand = None
+        self.gameover    = False
 
     def start(self, deck):
-        self.deck = deck
-
-
+        self.deck       = deck
         self.playerhand = self.deck.pull2RandomCards()
         self.dealerhand = [self.deck.pullRandomCard()] # The dealer only shows 1 card at first
 
-        while gamenotover:
+        while not self.gameover:
 
             #  Print player hand
             inf.prettyPrint('Your hand is:')
             inf.printHand(self.playerhand)
 
-            #  Has the player busted?
-            if self.deck.sumCards(self.playerhand) > 21:
-                inf.prettyPrint('YOU\'VE BUSTED')
-                return [False, inf.playAgain()]
-
-            #  Does the player have 21?
-            elif self.deck.sumCards(self.playerhand) == 21:
-                inf.prettyPrint('CONGRATULATIONS YOU\'VE GOT 21')
-
-                return [True, inf.playAgain()]
-
             #  Print dealer hand
             inf.prettyPrint(f'The dealer\'s hand is:')
             inf.printHand(self.dealerhand)
+
+            self.checkAll()
 
             #  Is the player eligible to split their cards?
             if self.playerhand[0][0] == self.playerhand[1][0] and roundcount == 1:
@@ -52,27 +41,20 @@ class BlackJack:
             #  Hit
             if choice == 1:
                 self.hit()
-
             #  Hold
             elif choice == 2:
-
-
+                self.hold()
             #  Double down
             elif choice == 3:               # Double down
                 self.doubleDown()
-
             #  Split
             elif choice == 4 and splitflag: # Split
                 splitflag = False
                 self.split()
 
-
             #  Check dealer cards
             if self.deck.sumCards(self.dealerhand) <= 17:
                 self.dealerhand.append(self.deck.pullRandomCard())
-                if self.deck.sumCards(self.dealerhand) == 21:
-                    inf.prettyPrint('DEALER HAS 21 -- YOU LOSE')
-                    return [False, inf.playAgain()]
 
             self.roundcount += 1
 
@@ -80,34 +62,70 @@ class BlackJack:
         self.playerhand.append(self.deck.pullRandomCard())
 
     def hold(self):
-    self.playerholds = True
-    while self.deck.sumCards(self.dealerhand) <= 17:
-        self.dealerhand.append(self.deck.pullRandomCard())
-        inf.printHand(self.dealerhand)
+        self.playerholds = True
+        while self.deck.sumCards(self.dealerhand) <= 17:
+            self.dealerhand.append(self.deck.pullRandomCard())
+            inf.printHand(self.dealerhand)
 
-    if self.dealerHasBusted(self.dealerhand, self.deck):
-        inf.prettyPrint('DEALER HAS BUSTED, YOU WIN')
-        return [True, inf.playAgain()]
-    elif self.deck.sumCards(self.dealerhand) > self.deck.sumCards(self.playerhand):
-        inf.prettyPrint('DEALER HAS WON, YOU LOSE')
-        return [False, inf.playAgain()]
-    elif self.deck.sumCards(self.dealerhand) < self.deck.sumCards(self.playerhand):
-        inf.prettyPrint('YOU HAVE WON, YOU WIN BIG MONEY BRO')
-        return [True, inf.playAgain()]
-    else:
-        inf.prettyPrint('TIE, NO ONE WINS')
-        return [True, inf.playAgain()]
+
 
     def doubleDown(self):
         pass
 
+
     def split(self):
         pass
+
 
     def dealerPullCard(self):
         pass
 
-    def dealerHasBusted(self):
+
+    def playerHasBusted(self, hand):
         if self.deck.sumCards(hand) > 21:
             return True
         return False
+
+    def checkGreaterHands(self):
+        playerhandgreater = self.deck.firstHandGreater([self.playerhand, self.dealerhand])
+        #  Player is closer to 21 than dealer
+        if playerhandgreater:
+            self.outcome = [True, inf.playAgain(), 'YOU HAVE WON, YOU WIN BIG MONEY']
+        #  Dealer is closer to 21 than player
+        elif playerhandgreater is False:
+            self.outcome = [False, inf.playAgain(), 'DEALER HAS WON, YOU LOSE']
+        #  Game ties
+        else:
+            self.outcome = [None, inf.playAgain(), 'TIE, NO ONE WINS']
+
+        self.gameover = True
+
+
+    def checkBusts(self, playerdealerhands):
+        #  Player busts
+        if self.playerHasBusted(playerdealerhands[0]):
+            self.outcome = [False, inf.playAgain(), 'YOU\'VE BUSTED']
+            self.gameover = True
+        #  Dealers busts
+        elif self.playerHasBusted(playerdealerhands[1]):
+            self.outcome = [True, inf.playAgain(), 'DEALER HAS BUSTED, YOU WIN']
+            self.gameover = True
+
+
+    def checkBlackJack(self):
+        playerhas21 = self.deck.sumCards(self.playerhand) == 21
+        dealerhas21 = self.deck.sumCards(self.dealerhand) == 21
+        if playerhas21 and dealerhas21:
+            self.outcome = [None , inf.playAgain(), 'TIE -- NO ONE WINS']
+        elif dealerhas21:
+            self.outcome = [False, inf.playAgain(), 'DEALER HAS 21 -- YOU LOSE']
+        elif playerhas21:
+            self.self.outcome = [False, inf.playAgain(), 'YOU HAVE 21 -- YOU WIN OL FELLA']
+
+        if playerhas21 or dealerhas21:
+            self.gameover = True
+
+    def checkAll(self):
+        self.checkBlackJack()
+        self.checkBusts([self.playerhand, self.dealerhand])
+        self.checkGreaterHands()

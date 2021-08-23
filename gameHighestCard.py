@@ -3,9 +3,10 @@ import InputFunctions as inf
 class HighestCard:
 
     def start(self, deck):
-        results = []
+        results      = []
         playercard   = deck.pullRandomCard()
         opponentcard = deck.pullRandomCard()
+
         while playercard[0] is opponentcard[0]:
             opponentcard = deck.pullRandomCard()
 
