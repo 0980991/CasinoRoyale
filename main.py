@@ -39,7 +39,7 @@ class Lounge:
     def chooseGame(self, choice=2):
         while choice != 0:
             choice = inf.optionsMenu('What game would you like to play today?',
-                                     ['Highest Card', 'Black Jack', 'Highest dice toss', 'View balance'])
+                                     ['Highest Card', 'Black Jack', 'Dice toss', 'View balance'])
 
             if choice == 1:
                 self.joinTable('highestcard')

@@ -45,6 +45,10 @@ class Game:
     def playGame(self):
         results = [None, 'continue']  # [Win/Lose, 'continue/'quit']
 
+        opponentamt = 0
+        while opponentamt not in range(1, 20):
+            opponentamt = int(input('How many opponents would you like to play against? '))
+
         while results[1] == 'continue':
             self.placeBet()
             if self.usedeck:
@@ -53,9 +57,9 @@ class Game:
                         results = self.currentgame.start(self.deck)
 
             if self.usedice:
-                sides = inf.readUserInput(["How many sides should your die be?"])
+                sides = inf.readUserInput(["How many sides should your die have?"])
                 self.dice = Dice(sides[0])
-                results  = self.currentgame.start(self.dice)
+                results  = self.currentgame.start(self.dice, opponentamt)
 
             if results[0] is None:  # The game tied...Add 0
                 self.currentbet = 0
@@ -66,7 +70,7 @@ class Game:
                 addorsubtract = 'subtract'
 
 
-            self.player.changeCredits(self.currentbet, addorsubtract)
+            self.player.changeCredits(self.currentbet, opponentamt, addorsubtract)
             self.currentbet = 0
         return
 

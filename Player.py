@@ -7,9 +7,9 @@ class Player:
          # Dictionary with e.g. Blackjack: 0.3
         db.establishConnection(f'INSERT INTO playerinfo VALUES ({inf.listToQuery([self.username, str(self.credits)])})', 'write')
 
-    def changeCredits(self, amt, changetype):
+    def changeCredits(self, amt, opponentamt, changetype):
         if changetype == 'add':
-            self.credits += amt
+            self.credits += amt * opponentamt
             db.establishConnection(f'UPDATE playerstats SET highestcard = {10} WHERE username = "{self.username}"','write')
 
         elif changetype == 'subtract':
