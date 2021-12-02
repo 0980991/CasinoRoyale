@@ -53,7 +53,7 @@ def listToQuery(valuelist):
     outputstring = '"' # double quotes needed for SQL to accept them als values
     for i, detail in enumerate(valuelist):
         if i != len(valuelist)-1:  # Adds  '", "' after every input except for the last
-            outputstring += detail + '", "'
+            outputstring += str(detail) + '", "'
         else:
             outputstring += detail + '"'
     return outputstring

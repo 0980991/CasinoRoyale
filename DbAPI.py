@@ -10,12 +10,14 @@ def establishConnection(sqlquery, accessmethod):
     cursor.execute('CREATE TABLE IF NOT EXISTS playerinfo('
                         'username VARCHAR,'
                         'credits  INTEGER)')
-
+    #cursor.execute('DROP TABLE playerstats')
     cursor.execute('CREATE TABLE IF NOT EXISTS playerstats('
                         'username VARCHAR REFERENCES playerinfo(username),'
-                        'highestcard INTEGER,' # Winrate of this game
-                        'blackjack INTEGER,'
-                        'largestbetwon VARCHAR)')
+                        'gamename VARCHAR,'
+                        'wins INTEGER,'
+                        'losses INTEGER,'
+                        'totalgames INTEGER,'
+                        'winrate REAL)')
 
     # Add Customer Data
     if accessmethod == 'write':

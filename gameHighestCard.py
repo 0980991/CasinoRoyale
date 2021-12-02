@@ -2,8 +2,9 @@ import InputFunctions as inf
 
 class HighestCard:
 
-    def start(self, deck):
+    def start(self, deck, opponentamt):
         results      = []
+        opponents    = []
         playercard   = deck.pullRandomCard()
         opponentcard = deck.pullRandomCard()
 

@@ -14,6 +14,7 @@ class Game:
         self.deck = None
         self.usedeck = False
         self.usedice = False
+        self.gamestring = game
 
         if   game == 'highestcard':
             self.currentgame = HighestCard()
@@ -71,6 +72,7 @@ class Game:
 
 
             self.player.changeCredits(self.currentbet, opponentamt, addorsubtract)
+            self.player.updateStats(self.gamestring, results[0])
             self.currentbet = 0
         return
 

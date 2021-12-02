@@ -1,58 +1,54 @@
 import InputFunctions as inf
-from asciiDice import asciiDice
+from AsciiDice import AsciiDice
 from Dice import Dice
 class DiceToss:
-    def __init__(self):
-        pass
 
     def start(self, dice, opponentamt):
-        self.dice = None
-        self.opponents = []
-        self.resultplayer1 = 0
-        self.outcome = None
-        self.gameover = False
-        self.ad = asciiDice()
+        self.dice = dice                            # Dice object
+        self.opponents = []                         # List of opponent scores/Index+1 is the opponent number
+        self.resultplayer1 = self.dice.roll()       # The point rolled by the player
+        self.ad = AsciiDice()                       # Ascii Dice object -- Controls visual aspects of the dice
 
-        while not self.gameover:
-            self.dice = dice
-            self.resultplayer1 = self.dice.roll()
-            self.resultplayer1 = 2
+        # Prevents 1v1 games to be a tie/acts as a base case when all except for 1 opponent is eliminated with tie games
+        if opponentamt == 1:
+            self.opponents.append(self.dice.roll())
+            while self.resultplayer1 == self.opponents[0]:
+                self.opponents[0] = self.dice.roll()
 
-            if opponentamt == 1:
+        else:
+            # Fill opponents list with points
+            for i in range(opponentamt):
                 self.opponents.append(self.dice.roll())
-                while self.resultplayer1 == self.opponents[0]:
-                    self.opponents[0] = self.dice.roll()
 
-            else:
-                for player in range(opponentamt):
-                    self.opponents.append(self.dice.roll())
 
-            print(f'You have rolled:\n{self.ad.getDice(self.resultplayer1)}')
+        # Print player results
+        print(f'You have rolled:\n{self.ad.getDice(self.resultplayer1)}')
+        inf.enterToContinue()
+
+        # Print opponent results
+        for i in range(len(self.opponents)):
+            print(f'Opponent {i+1} has rolled:\n{self.ad.getDice(self.opponents[i])}')
             inf.enterToContinue()
 
-            for i in range(len(self.opponents)):
-                print(f'Player {i+2} has rolled:\n{self.ad.getDice(self.opponents[i])}')
-                if self.opponents[i] > self.resultplayer1:
-                    return self.compareRolls()
-                inf.enterToContinue()
+            # Immediately terminate the round if an opponent has a higher score
+            if self.opponents[i] > self.resultplayer1:
+                return self.compareRolls()
 
-            return self.compareRolls()
-        #return self.outcome
+        return self.compareRolls()
 
     def compareRolls(self):
-
-        highestflag = True
-
+        # Are player results greater than the max
         if self.resultplayer1 > max(self.opponents):
             inf.prettyPrint('YOU WIN!!!! CONGRATULATIONS')
             return [True, inf.playAgain()]
+
         elif self.resultplayer1 < max(self.opponents):
             inf.prettyPrint('YOU LOSE!!! better luck next time')
             return [False, inf.playAgain()]
+
         else:
             nrties = self.opponents.count(max(self.opponents))
             return self.start(self.dice, nrties)
-        self.gameover = True
 
 
 #DiceToss().start(Dice(10), 20)

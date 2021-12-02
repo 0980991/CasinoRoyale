@@ -19,11 +19,10 @@ class Lobby:
         self.player = Player([''.join(username), 1300])
         return self.player
 
-########### TABLES #############
-
 
 class Lounge:
     def __init__(self):
+        self.tablenames = ['highestcard', 'blackjack', 'dicetoss']
         userinfo = []
         if not inf.yesNoInput('Do you have an existing account?'):
             self.player = Lobby().newPlayer()
@@ -39,25 +38,27 @@ class Lounge:
     def chooseGame(self, choice=2):
         while choice != 0:
             choice = inf.optionsMenu('What game would you like to play today?',
-                                     ['Highest Card', 'Black Jack', 'Dice toss', 'View balance'])
+                                     ['Highest Card', 'Black Jack', 'Dice toss', 'View balance', 'View statistics'])
 
-            if choice == 1:
-                self.joinTable('highestcard')
-            elif choice == 2:
-                self.joinTable('blackjack')
-            elif choice == 3:
-                self.joinTable('dicetoss')
-            elif choice == choice == 4:
+            if choice in [1, 2, 3]:
+                self.joinTable(self.tablenames[choice - 1])
+            elif choice == 4:
                 self.checkBalance()
+            elif choice == 5:
+                self.checkStats()
 
     def checkBalance(self):
         inf.prettyPrint(f'Your balance is: {self.player.getCredits()} M-Bucks')
         inf.enterToContinue()
 
+    def checkStats(self):
+        statsstring = self.player.getStats(self.tablenames[(inf.optionsMenu('Which game do you want to see stats from? ', ['Highest Card', 'Black Jack', 'Dice toss'])) - 1])
+        inf.enterToContinue(statsstring)
+
     def joinTable(self, gamename):
         game = Game(self.player, gamename).playGame()
         game = None
+
+
 if __name__ == '__main__':
     lounge = Lounge()
-    #lounge.chooseGame(self.player, gamename).playGame`()
-#Lounge()
