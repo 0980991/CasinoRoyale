@@ -1,23 +1,27 @@
 import DbAPI as db
-import InputFunctions as inf
+import miscfunctions as mf
 class Player:
-    def __init__(self, playerinfo):
-        self.username = playerinfo[0]
-        self.credits = playerinfo[1]
-        # Fill database with playername and credits
-        db.establishConnection(f'INSERT INTO playerinfo VALUES ({inf.listToQuery([self.username, str(self.credits)])})', 'write')
-        # Fill database with stats for each game
-        for game in ['highestcard', 'blackjack', 'dicetoss']:
-            db.establishConnection(f'INSERT INTO playerstats VALUES ({inf.listToQuery([self.username, game, 0, 0, 0, 0.0])})', 'write')
 
-        self.statistics = db.establishConnection(f'SELECT * FROM playerstats WHERE username = "{self.username}"', 'read')
-        print()
-        """
-        self.statistics = {'highestcard' : [0, 0, 0, 0.0], #[Wins, losses, total games, winrate]
-                           'blackjack'   : [0, 0, 0, 0.0], #[Wins, losses, total games, winrate]
-                           'dicetoss'    : [0, 0, 0, 0.0]} #[Wins, losses, total games, winrate]
-        # Dictionary with e.g. Blackjack: 0.3
-        """
+    # Initializes a player depending on the overload method
+    def __init__(self, *args):
+        # Initializes new player
+        if len(args) == 3: # args = username, password, credits
+            self.username = args[0][0]
+            self.statistics  = None
+
+            # Create a database row with playername and starter credits
+            db.establishConnection(f'INSERT INTO playerinfo VALUES ({mf.listToQuery([self.username, args[0][1], 1000])})', 'write')
+
+            # Fill database with stats for each game
+            for game in ['highestcard', 'blackjack', 'dicetoss']:
+                db.establishConnection(f'INSERT INTO playerstats VALUES ({mf.listToQuery([self.username, game, 0, 0, 0, 0.0])})', 'write')
+                self.statistics.append([self.username, game, 0, 0, 0, 0.0])
+
+        # Initializes existing player
+        elif len(args) == 2:
+            self.username    = args[0]
+            self.usercredits = db.establishConnection(f'SELECT credits FROM playerinfo WHERE username = "{self.username}" AND password = "{args[1]}"', 'read')
+            self.statistics  = db.establishConnection(f'SELECT * FROM playerstats WHERE username = "{self.username}" AND password = "{args[1]}"', 'read')
 
     def changeCredits(self, amt, opponentamt, changetype):
         if changetype == 'add':
@@ -50,15 +54,15 @@ class Player:
         self.statistics[game][3] = winrate
 
         # Update total wins and winrate in db
-        db.establishConnection(f'UPDATE playerstats SET totalgames = "{self.statistics[game][0]}", winrate = "{winrate}" WHERE username = "{self.username}" AND gamename = "{game}"')
+        db.establishConnection(f'UPDATE playerstats SET totalgames = "{self.statistics[game][0]}", winrate = "{winrate}" WHERE username = "{self.username}" AND gamename = "{game}"', 'write')
 
 
     def getStats(self, game):
         output = ''
-        stats = db.establishConnection(f'SELECT * FROM playerstats WHERE username = "{self.username}" AND game = "{game}"')
+        stats = db.establishConnection(f'SELECT * FROM playerstats WHERE username = "{self.username}" AND gamename = "{game}"', 'read')
         stattypes = ['Wins', 'Losses', 'Total rounds played', 'Win ratio']
         for i, stat in enumerate(self.statistics[game]):
-            output += f'{stattypes[i]}: {str(stat)}\n'
+            output += f'{stattypes[i]}: {str(stat[i])}\n'
 
         return output
 

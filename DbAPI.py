@@ -1,5 +1,5 @@
 import sqlite3 as sql
-
+import miscfunctions as mf
 
 def establishConnection(sqlquery, accessmethod):
     connect = sql.connect('SystemDb.db')
@@ -8,9 +8,10 @@ def establishConnection(sqlquery, accessmethod):
     # Creates tables if the DB file is created for the first time.
 
     cursor.execute('CREATE TABLE IF NOT EXISTS playerinfo('
-                        'username VARCHAR,'
+                        'username VARCHAR(20),'
+                        'password VARCHAR(20),'
                         'credits  INTEGER)')
-    #cursor.execute('DROP TABLE playerstats')
+
     cursor.execute('CREATE TABLE IF NOT EXISTS playerstats('
                         'username VARCHAR REFERENCES playerinfo(username),'
                         'gamename VARCHAR,'
@@ -19,7 +20,7 @@ def establishConnection(sqlquery, accessmethod):
                         'totalgames INTEGER,'
                         'winrate REAL)')
 
-    # Add Customer Data
+
     if accessmethod == 'write':
         cursor.execute(sqlquery) # In case of "No such column error" check quote marks around values
         connect.commit()
@@ -27,6 +28,16 @@ def establishConnection(sqlquery, accessmethod):
 
     elif accessmethod == 'read':
         cursor.execute(sqlquery)
-        return cursor.fetchall()
+        return mf.dbOutputToList(cursor.fetchall())
 
     connect.commit()
+
+
+
+
+### Developer queries ###
+
+# establishConnection('DELETE FROM playerinfo WHERE username = "Joe"', 'write')
+# establishConnection('DROP TABLE playerinfo', 'write')
+# establishConnection('DROP TABLE playerstats', 'write')
+# establishConnection('ALTER TABLE playerinfo ADD COLUMN "password VARCHAR(20)"')

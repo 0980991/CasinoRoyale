@@ -1,4 +1,4 @@
-import InputFunctions as inf
+import miscfunctions as mf
 
 class BlackJack:
     def __init__(self):
@@ -18,12 +18,12 @@ class BlackJack:
         while not self.gameover:
 
             #  Print player hand
-            inf.prettyPrint('Your hand is:')
-            inf.printHand(self.playerhand)
+            mf.prettyPrint('Your hand is:')
+            mf.printHand(self.playerhand)
 
             #  Print dealer hand
-            inf.prettyPrint(f'The dealer\'s hand is:')
-            inf.printHand(self.dealerhand)
+            mf.prettyPrint(f'The dealer\'s hand is:')
+            mf.printHand(self.dealerhand)
 
             self.checkAll()
 
@@ -36,7 +36,7 @@ class BlackJack:
                 playeroptions = ['Hit', 'Hold', 'Double down']
 
             #  Player chooses their move (see above)
-            choice = inf.optionsMenu('What is your next move?', playeroptions)
+            choice = mf.optionsMenu('What is your next move?', playeroptions)
 
             #  Hit
             if choice == 1:
@@ -65,7 +65,7 @@ class BlackJack:
         self.playerholds = True
         while self.deck.sumCards(self.dealerhand) <= 17:
             self.dealerhand.append(self.deck.pullRandomCard())
-            inf.printHand(self.dealerhand)
+            mf.printHand(self.dealerhand)
 
 
 
@@ -90,13 +90,13 @@ class BlackJack:
         playerhandgreater = self.deck.firstHandGreater([self.playerhand, self.dealerhand])
         #  Player is closer to 21 than dealer
         if playerhandgreater:
-            self.outcome = [True, inf.playAgain(), 'YOU HAVE WON, YOU WIN BIG MONEY']
+            self.outcome = [True, mf.playAgain(), 'YOU HAVE WON, YOU WIN BIG MONEY']
         #  Dealer is closer to 21 than player
         elif playerhandgreater is False:
-            self.outcome = [False, inf.playAgain(), 'DEALER HAS WON, YOU LOSE']
+            self.outcome = [False, mf.playAgain(), 'DEALER HAS WON, YOU LOSE']
         #  Game ties
         else:
-            self.outcome = [None, inf.playAgain(), 'TIE, NO ONE WINS']
+            self.outcome = [None, mf.playAgain(), 'TIE, NO ONE WINS']
 
         self.gameover = True
 
@@ -104,11 +104,11 @@ class BlackJack:
     def checkBusts(self, playerdealerhands):
         #  Player busts
         if self.playerHasBusted(playerdealerhands[0]):
-            self.outcome = [False, inf.playAgain(), 'YOU\'VE BUSTED']
+            self.outcome = [False, mf.playAgain(), 'YOU\'VE BUSTED']
             self.gameover = True
         #  Dealers busts
         elif self.playerHasBusted(playerdealerhands[1]):
-            self.outcome = [True, inf.playAgain(), 'DEALER HAS BUSTED, YOU WIN']
+            self.outcome = [True, mf.playAgain(), 'DEALER HAS BUSTED, YOU WIN']
             self.gameover = True
 
 
@@ -116,11 +116,11 @@ class BlackJack:
         playerhas21 = self.deck.sumCards(self.playerhand) == 21
         dealerhas21 = self.deck.sumCards(self.dealerhand) == 21
         if playerhas21 and dealerhas21:
-            self.outcome = [None , inf.playAgain(), 'TIE -- NO ONE WINS']
+            self.outcome = [None , mf.playAgain(), 'TIE -- NO ONE WINS']
         elif dealerhas21:
-            self.outcome = [False, inf.playAgain(), 'DEALER HAS 21 -- YOU LOSE']
+            self.outcome = [False, mf.playAgain(), 'DEALER HAS 21 -- YOU LOSE']
         elif playerhas21:
-            self.self.outcome = [False, inf.playAgain(), 'YOU HAVE 21 -- YOU WIN OL FELLA']
+            self.self.outcome = [False, mf.playAgain(), 'YOU HAVE 21 -- YOU WIN OL FELLA']
 
         if playerhas21 or dealerhas21:
             self.gameover = True

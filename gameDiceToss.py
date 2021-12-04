@@ -1,4 +1,4 @@
-import InputFunctions as inf
+import miscfunctions as mf
 from AsciiDice import AsciiDice
 from Dice import Dice
 class DiceToss:
@@ -23,12 +23,12 @@ class DiceToss:
 
         # Print player results
         print(f'You have rolled:\n{self.ad.getDice(self.resultplayer1)}')
-        inf.enterToContinue()
+        mf.enterToContinue()
 
         # Print opponent results
         for i in range(len(self.opponents)):
             print(f'Opponent {i+1} has rolled:\n{self.ad.getDice(self.opponents[i])}')
-            inf.enterToContinue()
+            mf.enterToContinue()
 
             # Immediately terminate the round if an opponent has a higher score
             if self.opponents[i] > self.resultplayer1:
@@ -39,12 +39,12 @@ class DiceToss:
     def compareRolls(self):
         # Are player results greater than the max
         if self.resultplayer1 > max(self.opponents):
-            inf.prettyPrint('YOU WIN!!!! CONGRATULATIONS')
-            return [True, inf.playAgain()]
+            mf.prettyPrint('YOU WIN!!!! CONGRATULATIONS')
+            return [True, mf.playAgain()]
 
         elif self.resultplayer1 < max(self.opponents):
-            inf.prettyPrint('YOU LOSE!!! better luck next time')
-            return [False, inf.playAgain()]
+            mf.prettyPrint('YOU LOSE!!! better luck next time')
+            return [False, mf.playAgain()]
 
         else:
             nrties = self.opponents.count(max(self.opponents))

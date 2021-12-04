@@ -5,7 +5,7 @@ from Deck import Deck
 from Deck import BlackJackDeck as BJD
 from Dice import Dice
 from Player import Player
-import InputFunctions as inf
+import miscfunctions as mf
 # interface for all casino games
 class Game:
     def __init__(self, player, game):
@@ -41,7 +41,7 @@ class Game:
                                        f'Available M-Bucks: {self.player.getCredits()}\n'))
             except ValueError:
                 print('Please enter a value')
-        inf.enterToContinue('Your bet has been placed')
+        mf.enterToContinue('Your bet has been placed')
 
     def playGame(self):
         results = [None, 'continue']  # [Win/Lose, 'continue/'quit']
@@ -58,7 +58,7 @@ class Game:
                         results = self.currentgame.start(self.deck)
 
             if self.usedice:
-                sides = inf.readUserInput(["How many sides should your die have?"])
+                sides = mf.readUserInput(["How many sides should your die have?"])
                 self.dice = Dice(sides[0])
                 results  = self.currentgame.start(self.dice, opponentamt)
 

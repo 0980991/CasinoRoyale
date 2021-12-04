@@ -55,7 +55,7 @@ def listToQuery(valuelist):
         if i != len(valuelist)-1:  # Adds  '", "' after every input except for the last
             outputstring += str(detail) + '", "'
         else:
-            outputstring += detail + '"'
+            outputstring += str(detail) + '"'
     return outputstring
 
 def formatDbRow(row, attributes):
@@ -64,6 +64,14 @@ def formatDbRow(row, attributes):
             outputstring += attributes[i] + str(userattribute) + '\n'
         return outputstring
 
+
+# Converts [(a, b, c), (d, e, f)] to [[a, b, c], [d, e, f]]
+def dbOutputToList(listoftuples):
+    for i, item in enumerate(listoftuples):
+        listoftuples[i] = list(item)
+    return listoftuples
+
+# Prints a box of characters around a string of any length
 def prettyPrint(msg):
     print(f'{6*"*"}{(len(msg)*"*")}\n'
           f'|  {msg}  |\n'
