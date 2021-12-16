@@ -1,0 +1,8 @@
+Add game/statistics to Player.py
+
+for player in db:
+    INSERT row player, 'new_game', 0, 0, 0, 0.0
+
+class Lounge:
+    - Update table_names list
+    - Update output_table_names list
