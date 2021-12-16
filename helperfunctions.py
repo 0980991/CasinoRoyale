@@ -21,14 +21,17 @@ def optionsMenu(header, options):
         choice = input()
     return int(choice)
 
-def yesNoInput(question=''):
-    userinput = input(question + '(Y/N)\n')
+def yesNoInput(question='', default_yes=True):
+    if default_yes:
+        question += '(Y/n)\n'
+    else:
+        question += '(y/N)\n'
+    user_input = input(question)
 
-    while userinput not in ['Y', 'N', 'y', 'n']:
-        print('Invalid input please enter Y or N\n')
-        userinput = input(question + '(Y/N)\n')
+    while user_input not in ['Y', 'N', 'y', 'n', '']:
+        print('Invalid input please enter y or n\n')
 
-    if userinput == 'Y' or userinput == 'y':
+    if user_input == 'Y' or user_input == 'y' or (user_input == '' and default_yes):
         return True
     return False
 
@@ -46,7 +49,7 @@ def readUserInput(questionList):
 
 def enterToContinue(message=''):
     input(message + '\nPlease press enter to continue...')
-    os.system('cls')   
+    os.system('cls')
 
 def pageHeader(text):
     print(f'*{(len(text)*"=")}*\n|{text}|\n*{(len(text)*"-")}*\n')
