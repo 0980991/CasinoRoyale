@@ -1,11 +1,4 @@
-from kivy.uix.widget import Widget
-from kivy.app import App
+import tkinter as tk
 
-class MainWidget(Widget):
+class GUI():
     pass
-
-class GUIApp(App):
-    pass
-
-
-GUIApp().run()

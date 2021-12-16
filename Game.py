@@ -16,6 +16,7 @@ class Game:
         self.game_string   = game
         self.game_instance = None
 
+    # Handles creating game instances and passing game objects such as decks and dice
     def playGame(self):
         results = [None, 'continue']  # [Win/Lose, 'continue/'quit']
         opponent_amt = self.setOpponentAmount()
@@ -59,20 +60,37 @@ class Game:
             self.current_bet = 0
         return
 
+    # Configures the number of opponents the player faces
     def setOpponentAmount(self):
-        return int(input('How many opponents would you like to play against? '))
+        opponent_amt = 0 # Used to enter the while loop
+        while opponent_amt <= 0:
+            print('Please enter the number of opponents you would like to play against')
+            try:
+                opponent_amt = int(input('Your must enter a value greater than 0:\n'))
+            except ValueError:
+                print(f'You must enter an integer value greater than 0:')
+        return opponent_amt
 
+    # Configures the number of sides on a dice
     def setDiceSides(self):
-        return int(input('How many sides should your die have? '))
+        sides = 0 # Used to enter the while loop
+        while sides <= 1:
+            print(f'Please enter the number of sides you dice has')
+            try:
+                sides = int(input('Your must enter a value greater than 1:\n'))
+            except ValueError:
+                print(f'You must enter an integer value greater than 1:')
+        return sides
 
+    # Places the players bet
     def placeBet(self):
         self.current_bet = self.player.getCredits() + 1 # Enables the while loop to be entered
-        while self.current_bet > self.player.getCredits():
+        while self.current_bet > self.player.getCredits() or self.current_bet <= 0:
+            print(f'Please enter a bet between 0 and {self.player.getCredits()} M-Bucks:\n')
             try:
                 self.current_bet = int(input('Please enter your bet:\n'
                                         f'Available M-Bucks: {self.player.getCredits()}\n'))
             except ValueError:
-                print('Please enter a value')
+                print(f'Please enter an integer value between 0 and {self.player.getCredits()} M-Bucks\n')
         hf.enterToContinue('Your bet has been placed')
 
-#game = Game(Player([''.join("Test"), 1000]), 'blackjack')

@@ -16,7 +16,10 @@ Menu
 ------------------
 - [ ] Backwards navigations
 - [ ] Catching faulty input
-  - [ ] class Game
-    - [ ] setOpponentAmount()
-    - [ ] setDiceSides
-    - [ ] placeBet
+  - [x] Game class
+    - [x] setOpponentAmount()
+    - [x] setDiceSides()
+    - [x] placeBet()
+  - [ ] Lobby class
+    - [ ] initializeNewPlayer()
+    - [ ] initializeExistingPlayer()

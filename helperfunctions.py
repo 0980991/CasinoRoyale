@@ -84,6 +84,8 @@ def prettyPrint(msg):
           f'|  {msg}  |\n'
           f'{6*"*"}{(len(msg)*"*")}')
 
+
+#### Specifically catered to this project ####
 def playAgain(): # returns a boolean
     enterToContinue()
     os.system('cls')
