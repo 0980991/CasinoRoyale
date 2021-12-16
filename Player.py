@@ -1,7 +1,7 @@
 import DbAPI as db
 import helperfunctions as hf
-class Player:
 
+class Player:
     # Initializes a player depending on the overload method
     def __init__(self, *args):
         # Initializes new player

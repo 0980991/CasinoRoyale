@@ -1,10 +1,8 @@
 import random as rd
-from sqlite3 import dbapi2
 import helperfunctions as hf
 
 import tkinter
 import DbAPI as db
-
 
 from Player import Player
 from Game import Game
@@ -84,5 +82,5 @@ class Lounge:
         game = None
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     lounge = Lounge()

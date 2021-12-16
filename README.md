@@ -1,6 +1,6 @@
 # CasinoRoyale
-Objected oriented digital casino with games such as blackjack
+Objected oriented digital casino with games such as blackjack, highest card and dice roll.
 
+Currently only supports single player games against bots
 
-
-RUN CASINOROYALE.PY to start the program. /// python CasinoRoyale.py
+Run main.py to start the program. /// python main.py

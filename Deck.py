@@ -32,9 +32,11 @@ class Deck:
         print(f'{self.valueToRank(card[0])} of {card[1]}')
 
     def pullRandomCard(self):
-        card = r.choice(self.deck)
-        self.removeCard(self.deck.index(card))
-        return card
+        if self.getLength() > 0:
+            card = r.choice(self.deck)
+            self.removeCard(self.deck.index(card))
+            return card
+        self.fillDeck()
 
     def pull2RandomCards(self):
         return [self.pullRandomCard(), self.pullRandomCard()]
