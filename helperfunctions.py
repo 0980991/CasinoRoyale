@@ -8,12 +8,16 @@ def optionsMenu(header, options):
     # Makes sure that invalid input gets cancelled
     optionsMenuHeader(header)
     for i in range(len(options)):
-        print(str(i+1)+".",options[i])
+        print(str(i+1)+'.',options[i])
     choice = input()
-    if choice == "b":
+    if choice == 'b':
         return -1
-    while int(choice) not in range(len(options)+1) or int(choice) == 0:
-        print("\nInvalid option. Please try again. (1 - %s)" % len(options))
+    try:
+        while int(choice) not in range(len(options)+1) or int(choice) == 0:
+            print("\nInvalid option. Please try again. (1 - %s)" % len(options))
+            choice = input()
+    except ValueError:
+        int("\nInvalid option. Please try again. (1 - %s)" % len(options))
         choice = input()
     return int(choice)
 
@@ -42,6 +46,7 @@ def readUserInput(questionList):
 
 def enterToContinue(message=''):
     input(message + '\nPlease press enter to continue...')
+    os.system('cls')   
 
 def pageHeader(text):
     print(f'*{(len(text)*"=")}*\n|{text}|\n*{(len(text)*"-")}*\n')
@@ -63,7 +68,6 @@ def formatDbRow(row, attributes):
         for i, userattribute in enumerate(row):
             outputstring += attributes[i] + str(userattribute) + '\n'
         return outputstring
-
 
 # Converts [(a, b, c), (d, e, f)] to [[a, b, c], [d, e, f]]
 def dbOutputToList(listoftuples):

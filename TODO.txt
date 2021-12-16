@@ -1,5 +1,0 @@
-Make highest card for unlimited opponents
-
-Store and retrieve player stats in DB (some float error in mf.)
-
-Blackjack!

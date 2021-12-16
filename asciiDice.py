@@ -58,6 +58,12 @@ class AsciiDice:
             else:
                 intdice = f'I---------I\n|{9* " "}|\n|{spaces}-{str(number)}-{spaces}|\n|{9* " "}|\nI---------I\n'
 
+#            'I---------I'  Dice will look something like this if number > 9
+#            '|         |'
+#            '|   20    |'
+#            '|         |'
+#            'I---------I'
+
             return intdice
         else:
             return self.dice[number-1]
