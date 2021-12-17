@@ -4,11 +4,11 @@ class BlackJack:
     def __init__(self):
         self.deck        = None
         self.outcome     = []
+        self.gameover    = False
         self.roundcount  = 1
         self.playerhand  = None
         self.dealerhand  = None
         self.playerholds = False
-        self.gameover    = False
 
     def start(self, deck):
         self.deck       = deck
@@ -28,7 +28,7 @@ class BlackJack:
             self.checkAll()
 
             #  Is the player eligible to split their cards?
-            if self.playerhand[0][0] == self.playerhand[1][0] and roundcount == 1:
+            if self.playerhand[0][0] == self.playerhand[1][0] and self.roundcount == 1:
                 playeroptions = ['Hit', 'Hold', 'Double down', 'Split']
                 splitflag = True
 
@@ -68,7 +68,6 @@ class BlackJack:
             hf.printHand(self.dealerhand)
 
 
-
     def doubleDown(self):
         pass
 
@@ -100,7 +99,6 @@ class BlackJack:
 
         self.gameover = True
 
-
     def checkBusts(self, playerdealerhands):
         #  Player busts
         if self.playerHasBusted(playerdealerhands[0]):
@@ -110,7 +108,6 @@ class BlackJack:
         elif self.playerHasBusted(playerdealerhands[1]):
             self.outcome = [True, hf.playAgain(), 'DEALER HAS BUSTED, YOU WIN']
             self.gameover = True
-
 
     def checkBlackJack(self):
         playerhas21 = self.deck.sumCards(self.playerhand) == 21

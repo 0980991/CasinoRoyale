@@ -23,3 +23,12 @@ Menu
   - [ ] Lobby class
     - [ ] initializeNewPlayer()
     - [ ] initializeExistingPlayer()
+
+App
+------------------
+- [ ] Model
+  - [ ] Seperate View aspects from the model
+- [ ] View
+  - [ ] tkinter integration
+- [ ] Controller
+  - [ ] Input conversion

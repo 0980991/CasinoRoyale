@@ -1,9 +1,12 @@
 import random as rd
 import helperfunctions as hf
 
-import tkinter
+from tkinter import *
+
+from View.LoungeView import *
 import DbAPI as db
 
+from PlayerController import *
 from Player import Player
 from Game import Game
 
@@ -12,44 +15,58 @@ class Lobby:
     def __init__(self):
         self.player = None
 
-    @classmethod
-    def initializeNewPlayer(self):
-        available = False
-        while not available:
-            username = input('Please enter your player name ')
-            available = self.verifyUsernameAvailability(username)
-        password = input('Please enter your password ')
-        # Create player object and assign it to the current player
-        return Player(''.join(username), password, 1000)
 
-    @classmethod
-    def initializeExistingPlayer(self):
-        user_exists = False
-        while not user_exists:
-            user_credentials = hf.readUserInput(['What is your username?', 'What is your password?'])
-            if db.establishConnection(f'SELECT * FROM playerinfo WHERE username = "{user_credentials[0]}" AND password = "{user_credentials[1]}"', 'read') != []:
-                user_exists = True
-
-        return Player(''.join(user_credentials[0]), user_credentials[1])
-
-    @classmethod
-    def verifyUsernameAvailability(self, username):
-        if db.establishConnection(f'SELECT * FROM playerinfo WHERE username = "{username[0]}"', 'read') != []:
-            print('This username is already in use, please try another')
-            return False
-        return True
 
 class Lounge:
     def __init__(self):
         self.table_names = ['highestcard', 'blackjack', 'dicetoss']             # Used to identify game types
         self.output_table_names = ['Highest Card', 'Blackjack', 'Dice Toss']    # Used to display game names on screen
 
-        if not hf.yesNoInput('Do you have an existing account?'):
-            self.player = Lobby.initializeNewPlayer()
-        else:
-            self.player = Lobby.initializeExistingPlayer()
+        self.root = Tk()
+        self.root.title('Casino Royale - Lounge')
+        self.root.geometry('500x500')
 
-        self.chooseGame()
+        # Main Frame
+        self.menu_frame = Frame(self.root)
+        self.menu_frame.grid(row=0, column=0)
+        Button(self.menu_frame, text='Start', command=self.login).pack()
+        self.root.mainloop()
+
+        self.previousframe
+        # Login Frame
+        self.login_frame = Frame(self.root)
+
+
+    def login(self):
+        self.clear(self.menu_frame)
+        self.login_frame = Frame(self.root)
+        self.login_frame.grid(row=0, column=0)
+        Label(self.login_frame, text='Do you have an existing account?').grid(row=1, column=250)
+        Button(self.login_frame, text='Yes', command=self.clickExistingPlayer).grid(row=1, column=0)
+        Button(self.login_frame, text='No',  command=self.clickNewPlayer).grid(row=1, column=1)
+        Button(self.login_frame, text='<--', command=self.back).grid(row=0, column=0)
+
+
+    # clear screen function
+    def clear(self, frame):
+        slaves = frame.grid_slaves()
+        for x in slaves:
+            x.destroy()
+
+    def back(self, frame):
+        pass
+
+    def clickExistingPlayer(self):
+        # Clear screen
+        self.clear()
+        # Render text fields/labels
+        menu_frame = Frame(self.root)
+        Entry()
+        # VerifyButton
+        pass
+
+    def clickNewPlayer(self):
+        pass
 
     def chooseGame(self, choice=2):
         option_list = self.output_table_names
@@ -80,6 +97,8 @@ class Lounge:
         game = Game(self.player, game_name).playGame()
         # Reset game variable
         game = None
+
+
 
 
 if __name__ == "__main__":
