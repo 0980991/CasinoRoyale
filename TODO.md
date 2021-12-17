@@ -8,9 +8,13 @@ Players
 Games
 ------------------
 - [ ] Finish BlackJack
-- [ ] Make highest card for unlimited opponents
+  - [ ] doubleDown()
+  - [ ] split()
+  - [ ] dealerPullCard()
+  
+- [x] Make highest card for unlimited opponents
   - [x] Add the support for a user generated amount of opponents
-  - [ ] Test whether the deck refills after every game
+  - [x] Test whether the deck refills after every game
 
 Menu
 ------------------

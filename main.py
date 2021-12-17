@@ -39,6 +39,7 @@ class Lobby:
             return False
         return True
 
+
 class Lounge:
     def __init__(self):
         self.table_names = ['highestcard', 'blackjack', 'dicetoss']             # Used to identify game types

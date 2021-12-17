@@ -19,30 +19,30 @@ class Game:
     # Handles creating game instances and passing game objects such as decks and dice
     def playGame(self):
         results = [None, 'continue']  # [Win/Lose, 'continue/'quit']
-        opponent_amt = self.setOpponentAmount()
+        #self.setOpponentAmount()
 
         while results[1] == 'continue':
-            self.placeBet()
-
+            #self.placeBet()
+            self.current_bet = 0
             if self.game_string == 'highestcard':
                 self.game_instance = HighestCard()
+                # Refill the deck before every game
                 self.deck = Deck()
                 self.deck.fillDeck()
-                # Refill the deck before every game
-                if self.deck.getLength() < 40:
-                    self.deck = self.deck.fillDeck()
-                results = self.game_instance.start(self.deck, opponent_amt)
+                results = self.game_instance.start(self.deck, self.opponent_amt)
 
             elif self.game_string == 'blackjack':
-                self.game_instance = BlackJack()
+                self.opponent_amt = 1 # To be removed
                 self.deck = BJD()
                 self.deck.fillDeck()
+                self.game_instance = BlackJack(self.deck, self.opponent_amt)
+                results = self.game_instance.start()
 
             elif self.game_string == 'dicetoss':
                 self.game_instance = DiceToss()
                 sides = self.setDiceSides()
                 self.dice = Dice(sides)
-                results  = self.game_instance.start(self.dice, opponent_amt)
+                results  = self.game_instance.start(self.dice, self.opponent_amt)
 
             if results[0] is None:  # The game tied...Add 0 (Should never happen but in case it does, the game doesnt break)
                 self.current_bet = 0
@@ -53,7 +53,7 @@ class Game:
                 add_or_subtract = 'subtract'
 
             # Update player credits both locally and in the database
-            self.player.changeCredits(self.current_bet, opponent_amt, add_or_subtract)
+            self.player.changeCredits(self.current_bet, self.opponent_amt, add_or_subtract)
             # Update statistics both locally and in the database
             self.player.updateStats(self.game_string, results[0])
             # Reset bet for next round
@@ -62,14 +62,14 @@ class Game:
 
     # Configures the number of opponents the player faces
     def setOpponentAmount(self):
-        opponent_amt = 0 # Used to enter the while loop
-        while opponent_amt <= 0:
+        self.opponent_amt = 0 # Used to enter the while loop
+        while self.opponent_amt <= 0:
             print('Please enter the number of opponents you would like to play against')
             try:
-                opponent_amt = int(input('Your must enter a value greater than 0:\n'))
+                self.opponent_amt = int(input('Your must enter a value greater than 0:\n'))
             except ValueError:
                 print(f'You must enter an integer value greater than 0:')
-        return opponent_amt
+        return
 
     # Configures the number of sides on a dice
     def setDiceSides(self):

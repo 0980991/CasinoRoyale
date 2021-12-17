@@ -14,4 +14,4 @@ while results[1] == 'continue':
 """
 
 # Game class new layout test
-#g.Game(p.Player('usr', 'pwd', 10000), 'dicetoss').setOpponentAmount()
+g.Game(p.Player('usr', 'pwd', 10000), 'blackjack').playGame()
