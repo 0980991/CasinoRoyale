@@ -1,8 +1,8 @@
 from gameDiceToss import DiceToss
 from gameHighestCard import HighestCard
-from gameBlackJack   import BlackJack
+from gameBlackjack   import Blackjack
 from Deck import Deck
-from Deck import BlackJackDeck as BJD
+from Deck import BlackjackDeck as BJD
 from Dice import Dice
 from Player import Player
 import helperfunctions as hf
@@ -22,7 +22,8 @@ class Game:
         #self.setOpponentAmount()
 
         while results[1] == 'continue':
-            #self.placeBet()
+            multiplier = 1
+            self.placeBet()
             self.current_bet = 0
             if self.game_string == 'highestcard':
                 self.game_instance = HighestCard()
@@ -35,8 +36,9 @@ class Game:
                 self.opponent_amt = 1 # To be removed
                 self.deck = BJD()
                 self.deck.fillDeck()
-                self.game_instance = BlackJack(self.deck, self.opponent_amt)
+                self.game_instance = Blackjack(self.deck, self.opponent_amt)
                 results = self.game_instance.start()
+                multiplier = 2 if results[2] == 2 else 1
 
             elif self.game_string == 'dicetoss':
                 self.game_instance = DiceToss()
@@ -53,7 +55,7 @@ class Game:
                 add_or_subtract = 'subtract'
 
             # Update player credits both locally and in the database
-            self.player.changeCredits(self.current_bet, self.opponent_amt, add_or_subtract)
+            self.player.changeCredits(self.current_bet * multiplier, self.opponent_amt, add_or_subtract)
             # Update statistics both locally and in the database
             self.player.updateStats(self.game_string, results[0])
             # Reset bet for next round

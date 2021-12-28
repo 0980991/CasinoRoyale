@@ -49,7 +49,6 @@ def readUserInput(questionList):
 
 def enterToContinue(message=''):
     input(message + '\nPlease press enter to continue...')
-    os.system('cls')
 
 def pageHeader(text):
     print(f'*{(len(text)*"=")}*\n|{text}|\n*{(len(text)*"-")}*\n')
@@ -103,4 +102,23 @@ def printHand(blackjack_hand): # returns nothing
         prettyPrint(f'{Deck().valueToRank(blackjack_hand[i][0])} of {blackjack_hand[i][1]}')
 
     enterToContinue()
-    pass
+
+def printBothHands(hands):
+    #hands = [[[1, 'hearts', 'Ace'], [1, 'hearts', 'Ace']], [[1, 'hearts', 'Ace'], [1, 'hearts', 'Ace']]]
+
+    #  Print player hand
+    prettyPrint('Your hand is:')
+    for i in range(len(hands[0])):
+        if hands[0][i][0] < 10:
+            print(f'{hands[0][i][0]} of {hands[0][i][1]}')
+        else:
+            print(f'{hands[0][i][2]} of {hands[0][i][1]}')
+    print()
+    #  Print dealer hand
+    prettyPrint(f'The dealer\'s hand is:')
+    for i in range(len(hands[1])):
+        if hands[1][i][0] == 10 and hands[1][i][2] != '':
+            print(f'{hands[1][i][2]} of {hands[1][i][1]}')
+        else:
+            print(f'{hands[1][i][0]} of {hands[1][i][1]}')
+    print()

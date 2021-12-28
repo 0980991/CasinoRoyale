@@ -71,7 +71,7 @@ class Deck:
         else: return None
 
 
-class BlackJackDeck(Deck):
+class BlackjackDeck(Deck):
     def __init__(self):
         super().__init__()
 
@@ -85,12 +85,27 @@ class BlackJackDeck(Deck):
                 elif value == 14: card_type = 'Ace'
                 else:             card_type = ''
 
-                if value > 10:
+                if value > 10 and value < 14:
                     self.deck.append([10, self.suits[suit], card_type])
+                elif value == 14:
+                    self.deck.append([11, self.suits[suit], card_type])
                 else:
                     self.deck.append([value, self.suits[suit], card_type])
 
         self.deck = self.shuffle()
 
-    def sumCards(self):
-        pass
+
+    def sumCards(self, hand):
+        sum = []
+        ace_hands = []
+        for i, card in enumerate(hand):
+            if card[2] == 'Ace':
+                ace_hands.append([1, card[1], ''])
+                ace_hands.append(hand[(i + 1) % 2])
+        sum.append(hand[0][0] + hand[1][0])
+
+        i = 0
+        while i < len(ace_hands):
+            sum.append(ace_hands[i][0] + ace_hands[i+1][0])
+            i += 2
+        return sum

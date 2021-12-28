@@ -7,7 +7,7 @@ Players
 
 Games
 ------------------
-- [ ] Finish BlackJack
+- [ ] Finish Blackjack
   - [ ] doubleDown()
   - [ ] split()
   - [ ] dealerPullCard()
