@@ -1,3 +1,4 @@
+import copy as copy
 import random as r
 import numpy as np
 
@@ -96,21 +97,22 @@ class BlackjackDeck(Deck):
 
     # Returns a list with multiple sums depending on whether the hand contains an ace
     def sumCards(self, hand):
-        sums = []
         all_hands = [hand]
-        ace_hands = []
-        for hand in all_hands:
-            for i, card in enumerate(hand):
-                sum = 0
-                sum += card[0]
-                if card[2] == 'Ace':
-                    all_hands.append(hand)
-                    all_hands[1].remove(card)
-                    all_hands[1].append([1, card[1], ''])
-                sums.append(sum)
 
-        i = 0
-        while i < len(ace_hands):
-            sum.append(ace_hands[i][0] + ace_hands[i+1][0])
-            i += 2
-        return sum
+        
+        for hand in all_hands:
+            for card in hand:
+                if card[2] == 'Ace':
+                    new_hand = copy.deepcopy(hand)
+                    new_hand.remove(card)
+                    new_hand.append([1, card[1], ''])
+                    all_hands.append(new_hand)
+
+        sums = []
+        for hand in all_hands:
+            sum = 0
+            for card in hand:
+                sum += card[0]
+            sums.append(sum)
+
+        return sums

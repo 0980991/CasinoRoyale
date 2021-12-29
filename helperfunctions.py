@@ -29,7 +29,7 @@ def yesNoInput(question='', default_yes=True):
     user_input = input(question)
 
     while user_input not in ['Y', 'N', 'y', 'n', '']:
-        print('Invalid input please enter y or n\n')
+        user_input = input('Invalid input please enter y or n\n')
 
     if user_input == 'Y' or user_input == 'y' or (user_input == '' and default_yes):
         return True
@@ -103,22 +103,18 @@ def printHand(blackjack_hand): # returns nothing
 
     enterToContinue()
 
-def printBothHands(hands):
+def printBothHands(hands, sums):
     #hands = [[[1, 'hearts', 'Ace'], [1, 'hearts', 'Ace']], [[1, 'hearts', 'Ace'], [1, 'hearts', 'Ace']]]
 
     #  Print player hand
-    prettyPrint('Your hand is:')
-    for i in range(len(hands[0])):
-        if hands[0][i][0] >= 10 and hands[0][1][2] != '':
-            print(f'{hands[0][i][2]} of {hands[0][i][1]}')
-        else:
-            print(f'{hands[0][i][0]} of {hands[0][i][1]}')
-    print()
-    #  Print dealer hand
-    prettyPrint(f'The dealer\'s hand is:')
-    for i in range(len(hands[1])):
-        if hands[1][i][0] == 10 and hands[1][i][2] != '':
-            print(f'{hands[1][i][2]} of {hands[1][i][1]}')
-        else:
-            print(f'{hands[1][i][0]} of {hands[1][i][1]}')
-    print()
+    prettyPrint(f'Your hand is {sums[0]}:')
+    for i, hand in enumerate(hands):
+        if i == 1:
+            prettyPrint(f'The dealer\'s hand is {sums[1]}:')
+        for card in hand:
+            if card[0] >= 10 and card[2] != '':
+                print(f'{card[2]} of {card[1]}')
+            else:
+                print(f'{card[0]} of {card[1]}')
+        print(27*'_')
+        print()

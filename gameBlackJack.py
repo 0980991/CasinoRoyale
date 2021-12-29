@@ -11,7 +11,7 @@ class Blackjack:
         self.player_holds = False
         self.opponent_amt = opponent_amt
 
-        self.player_win = True
+        self.player_win = 0 # 0 Tied, 1 Win, 2 Lose
         self.holding = False
         self.multiplier = 1
 
@@ -19,22 +19,41 @@ class Blackjack:
         ### Return [True/False, 'continue'/'quit', {multiplier}]
         self.playerMove()
         # Player has busted
-        if not self.player_win:
+        if self.player_win == 2:
                 hf.prettyPrint('You\'ve busted! Dealer wins!')
                 return [False, hf.playAgain(), self.multiplier]
 
         self.dealerMove()
         # Dealer has a blackjack
-        if not self.player_win:
+        if self.player_win == 2:
             hf.prettyPrint('Dealer has blackjack, You lose!')
             return [False, hf.playAgain(), self.multiplier]
 
+        # Dealer has busted
+        if self.player_win == 1:
+                hf.prettyPrint('Dealer has busted! You win!')
+                return [True, hf.playAgain(), self.multiplier]
+
         self.compareHands()
-        return [self.player_win, hf.playAgain(), self.multiplier]
+        if self.player_win == 0:
+            return [None, hf.playAgain(), self.multiplier]
+        elif self.player_win == 1:
+            return [True, hf.playAgain(), self.multiplier]
+        return [False, hf.playAgain(), self.multiplier]
 
     def playerMove(self):
         while not self.holding:
-            hf.printBothHands([self.player_hand, self.dealer_hand])
+            hf.printBothHands(
+                              [self.player_hand, self.dealer_hand],
+                              [self.deck.sumCards(self.player_hand), self.deck.sumCards(self.dealer_hand)]
+                              )
+            # Check if player has blackjack
+            if 21 in self.deck.sumCards(self.player_hand):
+                return
+            # Check if player has busted
+            if self.hasBusted(self.player_hand):
+                self.player_win = 2
+                return
             player_options = ['Hit', 'Hold']
 
             # Is the player eligible to double down and/or split their cards?
@@ -65,25 +84,38 @@ class Blackjack:
             elif choice == 4 and split_flag:
                 split_flag = False
                 self.split()
-            # Player busts
-            if self.hasBusted(self.player_hand):
-                self.player_win = False
-                return
+
 
     def split(self):
         pass
 
     def dealerMove(self):
         self.dealer_hand.append(self.deck.pullRandomCard())
+        while (not self.dealerHolds()):
+            hf.printBothHands(
+                              [self.player_hand, self.dealer_hand],
+                              [self.deck.sumCards(self.player_hand), self.deck.sumCards(self.dealer_hand)]
+                              )
+            hf.enterToContinue()
 
-        while (not self.dealerHolds()) or (not self.hasBusted(self.dealer_hand)):
-            if self.deck.sumCards(self.dealer_hand) == 21:
-                self.player_win = False
             self.dealer_hand.append(self.deck.pullRandomCard())
-            hf.printBothHands([self.player_hand, self.dealer_hand[0]])
+            # Dealer has blackjack
+            if 21 in self.deck.sumCards(self.dealer_hand[:-1]):  # [:-1] Removes the card added in the line above 
+                self.player_win = 2
+                return
+            BBBBBBBBBBBBBBBBBBBBB = self.hasBusted(self.dealer_hand[:-1])
+            if self.dealerHolds():
+                print('holding')
+
+        self.dealer_hand.pop()
+        # Dealer has busted
+        if self.hasBusted(self.dealer_hand):
+            self.player_win = 1
+
+        return
 
     def dealerHolds(self):
-        if min(self.deck.sumCards(self.dealer_hand)) >= 17:
+        if max(self.deck.sumCards(self.dealer_hand[:-1])) > 17:
             return True
         return False
 
@@ -95,8 +127,8 @@ class Blackjack:
         return False
 
     def compareHands(self):
-        player_scores = self.deck.sumCards(self.player_hand).sort()
-        dealer_scores = self.deck.sumCards(self.dealer_hand).sort()
+        player_scores = self.deck.sumCards(self.player_hand)
+        dealer_scores = self.deck.sumCards(self.dealer_hand)
 
         # Player has 21 or dealer has busted
         if 21 in player_scores or self.hasBusted(self.dealer_hand):
@@ -105,21 +137,20 @@ class Blackjack:
 
         # Remove scores > 21 in order to compare the final max score of each hand using max()
         for p_score in player_scores:
-            if p_score < 21:
+            if p_score > 21:
                 player_scores.remove(p_score)
 
         for d_score in dealer_scores:
-            if d_score < 21:
+            if d_score > 21:
                 dealer_scores.remove(d_score)
 
         # Dealer has higher cards than player
         if max(player_scores) < max(dealer_scores):
             hf.prettyPrint('Dealer has higher card values, you lose!')
-            self.player_win = False
+            self.player_win =  2
 
         elif max(player_scores) == max(dealer_scores):
             hf.prettyPrint('Tie game!, Nobody wins')
-            self.player_win = None
 
         else:
             hf.prettyPrint('Congratulations you win!!')
