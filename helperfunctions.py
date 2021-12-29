@@ -109,10 +109,10 @@ def printBothHands(hands):
     #  Print player hand
     prettyPrint('Your hand is:')
     for i in range(len(hands[0])):
-        if hands[0][i][0] < 10:
-            print(f'{hands[0][i][0]} of {hands[0][i][1]}')
-        else:
+        if hands[0][i][0] >= 10 and hands[0][1][2] != '':
             print(f'{hands[0][i][2]} of {hands[0][i][1]}')
+        else:
+            print(f'{hands[0][i][0]} of {hands[0][i][1]}')
     print()
     #  Print dealer hand
     prettyPrint(f'The dealer\'s hand is:')

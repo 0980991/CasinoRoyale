@@ -94,15 +94,20 @@ class BlackjackDeck(Deck):
 
         self.deck = self.shuffle()
 
-
+    # Returns a list with multiple sums depending on whether the hand contains an ace
     def sumCards(self, hand):
-        sum = []
+        sums = []
+        all_hands = [hand]
         ace_hands = []
-        for i, card in enumerate(hand):
-            if card[2] == 'Ace':
-                ace_hands.append([1, card[1], ''])
-                ace_hands.append(hand[(i + 1) % 2])
-        sum.append(hand[0][0] + hand[1][0])
+        for hand in all_hands:
+            for i, card in enumerate(hand):
+                sum = 0
+                sum += card[0]
+                if card[2] == 'Ace':
+                    all_hands.append(hand)
+                    all_hands[1].remove(card)
+                    all_hands[1].append([1, card[1], ''])
+                sums.append(sum)
 
         i = 0
         while i < len(ace_hands):

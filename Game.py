@@ -19,11 +19,11 @@ class Game:
     # Handles creating game instances and passing game objects such as decks and dice
     def playGame(self):
         results = [None, 'continue']  # [Win/Lose, 'continue/'quit']
-        #self.setOpponentAmount()
+        #self.setOpponentAmount() disabeled for debugging
 
         while results[1] == 'continue':
             multiplier = 1
-            self.placeBet()
+            #self.placeBet()  disabeled for debugging
             self.current_bet = 0
             if self.game_string == 'highestcard':
                 self.game_instance = HighestCard()

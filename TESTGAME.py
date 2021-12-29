@@ -14,4 +14,9 @@ while results[1] == 'continue':
 """
 
 # Game class new layout test
-g.Game(p.Player('usr', 'pwd', 10000), 'blackjack').playGame()
+# g.Game(p.Player('usr', 'pwd', 10000), 'blackjack').playGame()
+
+bjd = d.BlackjackDeck()
+bjd.fillDeck()
+sum = bjd.sumCards([[11, 'hearts', 'Ace'], [11, 'spades', 'Ace'], [3, 'spades', '']])
+print(sum)
