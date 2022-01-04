@@ -33,10 +33,10 @@ class Game:
                 results = self.game_instance.start(self.deck, self.opponent_amt)
 
             elif self.game_string == 'blackjack':
-                self.opponent_amt = 1 # To be removed
+                self.opponent_amt = 1
                 self.deck = BJD()
                 self.deck.fillDeck()
-                self.game_instance = Blackjack(self.deck, self.opponent_amt)
+                self.game_instance = Blackjack(self.deck)
                 results = self.game_instance.start()
                 multiplier = 2 if results[2] == 2 else 1
 

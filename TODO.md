@@ -10,8 +10,8 @@ Games
 - [ ] Finish Blackjack
   - [ ] doubleDown()
   - [ ] split()
-  - [ ] dealerPullCard()
-  
+  - [x] dealerPullCard()
+
 - [x] Make highest card for unlimited opponents
   - [x] Add the support for a user generated amount of opponents
   - [x] Test whether the deck refills after every game

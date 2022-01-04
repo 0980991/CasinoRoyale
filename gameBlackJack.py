@@ -1,100 +1,129 @@
 import helperfunctions as hf
 
 class Blackjack:
-    def __init__(self, deck, opponent_amt):
+    def __init__(self, deck):
         self.deck         = deck
-        self.outcome      = []
-        self.gameover     = False
-        self.round_count  = 1
-        self.player_hand  = self.deck.pull2RandomCards()
-        self.dealer_hand  = [self.deck.pullRandomCard()]
-        self.player_holds = False
-        self.opponent_amt = opponent_amt
-
+        self.player_hand_1   = self.deck.pull2RandomCards()
+        self.player_hand_1   = [[4, 'Spades', ''], [4, 'Hearts', '']]
+        self.player_hand_2   = None  # This hand is created in the event of a split action.
+        self.dealer_hand     = [self.deck.pullRandomCard()]
         self.player_win = 0 # 0 Tied, 1 Win, 2 Lose
         self.holding = False
         self.multiplier = 1
+        self.double_down = False
+        self.results = []
+        self.last_hand = True
 
     def start(self):
         ### Return [True/False, 'continue'/'quit', {multiplier}]
-        self.playerMove()
+        self.playerMove(self.player_hand_1)
         # Player has busted
         if self.player_win == 2:
-                hf.prettyPrint('You\'ve busted! Dealer wins!')
-                return [False, hf.playAgain(), self.multiplier]
+            hf.prettyPrint('Your hand has busted!')
+            self.results.append(False)
+            if self.last_hand:
+                return self.parseResults()
+            # hf.enterToContinue('Your first hand has busted')
+
 
         self.dealerMove()
         # Dealer has a blackjack
         if self.player_win == 2:
             hf.prettyPrint('Dealer has blackjack, You lose!')
-            return [False, hf.playAgain(), self.multiplier]
+            self.results.append(False)
+            return self.parseResults()
 
         # Dealer has busted
         if self.player_win == 1:
-                hf.prettyPrint('Dealer has busted! You win!')
-                return [True, hf.playAgain(), self.multiplier]
+            hf.prettyPrint('Dealer has busted! You win!')
+            self.results.append(True)
+            return self.parseResults()
 
         self.compareHands()
         if self.player_win == 0:
-            return [None, hf.playAgain(), self.multiplier]
-        elif self.player_win == 1:
-            return [True, hf.playAgain(), self.multiplier]
-        return [False, hf.playAgain(), self.multiplier]
+            self.results.append(None)
+            return self.parseResults()
 
-    def playerMove(self):
-        while not self.holding:
+        elif self.player_win == 1:
+            self.results.append(True)
+            return self.parseResults()
+
+        self.results.append(False)
+        return self.parseResults()
+
+    def playerMove(self, player_hand):
+        round_count = 1
+        holding = False
+
+        # Instantiates the value to pass to the print function in order to differntiate between 1st and second hand in case of split
+        if self.last_hand:
+            player_hand_nr = 1
+        else:
+            player_hand_nr = 2
+
+        while not holding:
             hf.printBothHands(
-                              [self.player_hand, self.dealer_hand],
-                              [self.deck.sumCards(self.player_hand), self.deck.sumCards(self.dealer_hand)]
-                              )
+                              [player_hand, self.dealer_hand],
+                              [self.deck.sumCards(player_hand), self.deck.sumCards(self.dealer_hand)],
+                              player_hand_nr
+                             )
             # Check if player has blackjack
-            if 21 in self.deck.sumCards(self.player_hand):
+            if 21 in self.deck.sumCards(player_hand):
+                hf.enterToContinue('You have 21')
                 return
             # Check if player has busted
-            if self.hasBusted(self.player_hand):
+            if self.hasBusted(player_hand):
                 self.player_win = 2
                 return
             player_options = ['Hit', 'Hold']
 
             # Is the player eligible to double down and/or split their cards?
-            if self.round_count == 1:
+            if round_count == 1:
                 player_options.append('Double down')
 
                 #  Does the player hold a pair?
-                if self.player_hand[0][0] == self.player_hand[1][0]:
-                    player_options = ['Hit', 'Hold', 'Double down', 'Split']
+                if player_hand[0][0] == player_hand[1][0]:
+                    player_options.append('Split')
                     split_flag = True
-
+            round_count += 1
 
             #  Player chooses their move (see above)
             choice = hf.optionsMenu('What is your next move?', player_options)
             #  Hit
             if choice == 1:
-                self.player_hand.append(self.deck.pullRandomCard())
+                player_hand.append(self.deck.pullRandomCard())
             #  Hold
             elif choice == 2:
-                self.holding = True
+                holding = True
 
             #  Double down
             elif choice == 3:
                 self.multiplier = 2
-                self.player_hand.append(self.deck.pullRandomCard())
-                self.holding = True
+                self.double_down = True
+                player_hand.append(self.deck.pullRandomCard())
+                holding = True
             #  Split
             elif choice == 4 and split_flag:
                 split_flag = False
                 self.split()
-
+        return player_hand
 
     def split(self):
-        pass
+        self.player_hand_2 = [self.player_hand_1[1]]
+        self.player_hand_2.append(self.deck.pullRandomCard())
+        self.player_hand_1.pop()
+        self.player_hand_1.append(self.deck.pullRandomCard())
+        self.last_hand = False
+        self.playerMove(self.player_hand_2)
+        self.last_hand = True
 
     def dealerMove(self):
         self.dealer_hand.append(self.deck.pullRandomCard())
         while (not self.dealerHolds()):
             hf.printBothHands(
-                              [self.player_hand, self.dealer_hand],
-                              [self.deck.sumCards(self.player_hand), self.deck.sumCards(self.dealer_hand)]
+                              [self.player_hand_1, self.dealer_hand],
+                              [self.deck.sumCards(self.player_hand_1), self.deck.sumCards(self.dealer_hand)],
+                              2
                               )
             hf.enterToContinue()
 
@@ -103,7 +132,6 @@ class Blackjack:
             if 21 in self.deck.sumCards(self.dealer_hand[:-1]):  # [:-1] Removes the card added in the line above 
                 self.player_win = 2
                 return
-            BBBBBBBBBBBBBBBBBBBBB = self.hasBusted(self.dealer_hand[:-1])
             if self.dealerHolds():
                 print('holding')
 
@@ -127,13 +155,12 @@ class Blackjack:
         return False
 
     def compareHands(self):
-        player_scores = self.deck.sumCards(self.player_hand)
+        player_scores = self.deck.sumCards(self.player_hand_1)
         dealer_scores = self.deck.sumCards(self.dealer_hand)
 
         # Player has 21 or dealer has busted
         if 21 in player_scores or self.hasBusted(self.dealer_hand):
-                hf.prettyPrint('YOU WIN')
-                return
+            self.results.append(True)
 
         # Remove scores > 21 in order to compare the final max score of each hand using max()
         for p_score in player_scores:
@@ -146,13 +173,28 @@ class Blackjack:
 
         # Dealer has higher cards than player
         if max(player_scores) < max(dealer_scores):
-            hf.prettyPrint('Dealer has higher card values, you lose!')
-            self.player_win =  2
+            self.results.append(False)
 
         elif max(player_scores) == max(dealer_scores):
+            self.results.append(True)
+            self.multiplier = 0
             hf.prettyPrint('Tie game!, Nobody wins')
 
         else:
-            hf.prettyPrint('Congratulations you win!!')
-
+            self.results.append(True)
         return
+
+    def parseResults(self):
+        # If player has not split their cards
+        if len(self.results) == 1 and not self.double_down:
+            return [self.results[0], hf.playAgain(), 1]
+        else:
+            # Player won both hands
+            if self.results[0][0] and self.results[1][0]:
+                return [True, hf.playAgain(), 2]
+            # Player lost both hands
+            elif not self.results[0][0] and not self.results[1][0]:
+                return [False, hf.playAgain(), 1]
+            # Player has won 1 and lost the other hand
+            else:
+                return [True, hf.playAgain(), 1]

@@ -99,7 +99,7 @@ class BlackjackDeck(Deck):
     def sumCards(self, hand):
         all_hands = [hand]
 
-        
+
         for hand in all_hands:
             for card in hand:
                 if card[2] == 'Ace':

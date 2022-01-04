@@ -103,11 +103,12 @@ def printHand(blackjack_hand): # returns nothing
 
     enterToContinue()
 
-def printBothHands(hands, sums):
-    #hands = [[[1, 'hearts', 'Ace'], [1, 'hearts', 'Ace']], [[1, 'hearts', 'Ace'], [1, 'hearts', 'Ace']]]
+def printBothHands(hands, sums, player_hand_nr):
+    if player_hand_nr == 1:
+        prettyPrint(f'Your hand is {sums[0]}:')
+    else:
+        prettyPrint(f'Your second hand is {sums[0]}:')
 
-    #  Print player hand
-    prettyPrint(f'Your hand is {sums[0]}:')
     for i, hand in enumerate(hands):
         if i == 1:
             prettyPrint(f'The dealer\'s hand is {sums[1]}:')
