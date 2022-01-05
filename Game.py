@@ -19,12 +19,12 @@ class Game:
     # Handles creating game instances and passing game objects such as decks and dice
     def playGame(self):
         results = [None, 'continue']  # [Win/Lose, 'continue/'quit']
-        #self.setOpponentAmount() disabeled for debugging
+        if self.game_string != 'blackjack':
+            self.setOpponentAmount()
 
         while results[1] == 'continue':
             multiplier = 1
-            #self.placeBet()  disabeled for debugging
-            self.current_bet = 0
+            self.placeBet()
             if self.game_string == 'highestcard':
                 self.game_instance = HighestCard()
                 # Refill the deck before every game
@@ -38,7 +38,7 @@ class Game:
                 self.deck.fillDeck()
                 self.game_instance = Blackjack(self.deck)
                 results = self.game_instance.start()
-                multiplier = 2 if results[2] == 2 else 1
+                multiplier = results[2]
 
             elif self.game_string == 'dicetoss':
                 self.game_instance = DiceToss()

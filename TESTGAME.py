@@ -1,7 +1,13 @@
+import side_by_side
 import gameHighestCard as game
 import Deck as d
 import Game as g
 import Player as p
+import helperfunctions as hf
+from side_by_side import print_side_by_side
+import os
+from main import Lounge
+lounge = Lounge()
 
 # Highest card Unit test
 """ game = game.HighestCard()
@@ -12,9 +18,8 @@ while results[1] == 'continue':
     deck.fillDeck()
     results = game.start(deck, 30)
 """
-
 # Game class new layout test
-g.Game(p.Player('usr', 'pwd', 10000), 'blackjack').playGame()
+# g.Game(p.Player('usr', 'pwd', 10000), 'blackjack').playGame()
 
 # bjd = d.BlackjackDeck()
 # bjd.fillDeck()

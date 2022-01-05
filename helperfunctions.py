@@ -1,4 +1,5 @@
 import os
+import side_by_side as sbs
 from Deck import Deck
 
 def optionsMenu(header, options):
@@ -77,11 +78,13 @@ def dbOutputToList(listoftuples):
         listoftuples[i] = list(item)
     return listoftuples
 
+def prettyString(msg):
+    output = f'{6*"*"}{(len(msg)*"*")}\n|  {msg}  |\n{6*"*"}{(len(msg)*"*")}'
+    return output
+
 # Prints a box of characters around a string of any length
 def prettyPrint(msg):
-    print(f'{6*"*"}{(len(msg)*"*")}\n'
-          f'|  {msg}  |\n'
-          f'{6*"*"}{(len(msg)*"*")}')
+    print(prettyString(msg))
 
 
 #### Specifically catered to this project ####
@@ -104,18 +107,18 @@ def printHand(blackjack_hand): # returns nothing
     enterToContinue()
 
 def printBothHands(hands, sums, player_hand_nr):
+    output = ['', '']
     if player_hand_nr == 1:
-        prettyPrint(f'Your hand is {sums[0]}:')
+        output[0] += prettyString(f'Your hand is {sums[0]}:')
     else:
-        prettyPrint(f'Your second hand is {sums[0]}:')
+        output[0] += prettyString(f'Your second hand is {sums[0]}:')
 
+    output[1] += prettyString(f'The dealer\'s hand is {sums[1]}:')
     for i, hand in enumerate(hands):
-        if i == 1:
-            prettyPrint(f'The dealer\'s hand is {sums[1]}:')
         for card in hand:
             if card[0] >= 10 and card[2] != '':
-                print(f'{card[2]} of {card[1]}')
+                output[i] += f'\n{card[2]} of {card[1]}'
             else:
-                print(f'{card[0]} of {card[1]}')
-        print(27*'_')
-        print()
+                output[i] += f'\n{card[0]} of {card[1]}'
+    sbs.print_side_by_side(output[0] , output[1] )
+    print('\n')

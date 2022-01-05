@@ -9,7 +9,15 @@ Games
 ------------------
 - [ ] Finish Blackjack
   - [ ] doubleDown()
+    - [ ] Make sure the user has enough money to double their bet
   - [ ] split()
+    - [ ] Make sure the user has enough money to split their bet
+    - [x] Split 1 hand into 2 hands
+    - [x] Give player 2 turns when they split their cards
+    - [x] Parse the results according to how many of the player's hands win/lose
+  - [ ] UI stuff
+    - [ ] Printing split hands underneath one another
+    - [ ] Improving messages when player wins/loses
   - [x] dealerPullCard()
 
 - [x] Make highest card for unlimited opponents
@@ -18,7 +26,7 @@ Games
 
 Menu
 ------------------
-- [ ] Backwards navigations
+- [ ] Backwards navigation
 - [ ] Catching faulty input
   - [x] Game class
     - [x] setOpponentAmount()
