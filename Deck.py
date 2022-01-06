@@ -115,4 +115,4 @@ class BlackjackDeck(Deck):
                 sum += card[0]
             sums.append(sum)
 
-        return sums
+        return list(dict.fromkeys(sums))  # Removes duplicates

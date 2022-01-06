@@ -2,16 +2,17 @@ import helperfunctions as hf
 import side_by_side as sbs
 
 class Blackjack:
-    def __init__(self, deck):
-        self.deck         = deck
-        self.player_hand_1   = self.deck.pull2RandomCards()
-        self.player_hand_2   = None  # This hand is created in the event of a split action.
-        self.dealer_hand     = [self.deck.pullRandomCard()]
-        self.player_win = 0 # 0 Tied, 1 Win, 2 Lose
-        self.double_down = False
-        self.results = []
-        self.current_hand_nr = 1
-
+    def __init__(self, deck, can_increase_bet):
+        self.deck             = deck
+        self.results          = []
+        self.player_win       = 0 # 0 Tied, 1 Win, 2 Lose
+        self.double_down      = [False, False]
+        self.dealer_hand      = [self.deck.pullRandomCard()]
+        self.player_hand_1    = self.deck.pull2RandomCards()
+        self.player_hand_1    = [[8, 'Hearts', ''], [8, 'Hearts', '']]
+        self.player_hand_2    = None  # This hand is created in the event of a split action.
+        self.current_hand_nr  = 1
+        self.can_increase_bet = can_increase_bet
     ### Return [True/False, 'continue'/'quit', {multiplier}]
     def start(self):
         self.playerMove(self.player_hand_1)
@@ -77,7 +78,7 @@ class Blackjack:
             player_options = ['Hit', 'Hold']
 
             # Is the player eligible to double down and/or split their cards?
-            if round_count == 1:
+            if (round_count == 1) and (True not in self.double_down) and (self.can_increase_bet):
                 player_options.append('Double down')
 
                 #  Does the player hold a pair?
@@ -96,9 +97,14 @@ class Blackjack:
                 holding = True
             #  Double down
             elif choice == 3:
-                self.double_down = True
+                self.double_down[self.current_hand_nr - 1] = True
+                self.double_down.append(True)
                 player_hand.append(self.deck.pullRandomCard())
-                holding = True
+                if self.hasBusted(player_hand):
+                    self.player_win = 2
+                else:
+                    holding = True
+
             #  Split
             elif choice == 4 and split_flag:
                 split_flag = False
@@ -168,8 +174,15 @@ class Blackjack:
         return
 
     def parseResults(self):
+        # Increase multiplier if player has doubled down
+        if True in self.double_down:
+            multiplier = 1
+            # Set multiplier to 0 if the double down hand has pushed
+            if None in self.results:
+                multiplier = 0 if self.results.index(None) == self.double_down.index(True) else 1
+
         # If player has not split their cards
-        if len(self.results) == 1 and not self.double_down:
+        if len(self.results) == 1:
             if self.results[0] is None:
                 print('You tied')
                 return [True, hf.playAgain(), 0]
@@ -177,27 +190,35 @@ class Blackjack:
                 print('You win')
             else:
                 print('You lose')
-            return [self.results[0], hf.playAgain(), 1]
+
+            if self.double_down:
+                return [self.results[0], hf.playAgain(), 2]
+            else:
+                return [self.results[0], hf.playAgain(), 1]
+
         else:
             if self.results[0] == self.results[1] and None not in self.results:
+                multiplier = 0
+                if True in self.double_down:
+                    multiplier = 1
                 # Won both hands
                 if True in self.results:
                     print('You win')
-                    return [True, hf.playAgain(), 2]
+                    return [True, hf.playAgain(), 2 + multiplier]
                 # lose both hands
                 else:
                     print('You lose')
-                    return [False, hf.playAgain(), 2]
+                    return [False, hf.playAgain(), 2 + multiplier]
 
             # Player won 1 hand and pushed the second
             elif True in self.results and None in self.results:
                 print('You win')
-                return [True, hf.playAgain(), 1]
+                return [True, hf.playAgain(), 1 + multiplier]
 
             # Player lose 1 hand and pushed the second
             elif False in self.results and None in self.results:
                 print('You lose')
-                return [False, hf.playAgain(), 1]
+                return [False, hf.playAgain(), 1 + multiplier]
 
             # Player either (lose 1 and won 1) or (Both hands have the same value as the dealer)
             else:

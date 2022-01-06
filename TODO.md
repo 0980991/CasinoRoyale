@@ -8,8 +8,9 @@ Players
 Games
 ------------------
 - [ ] Finish Blackjack
+  - [ ] Add more decks to self.deck when instantiating Blackjack
   - [ ] doubleDown()
-    - [ ] Make sure the user has enough money to double their bet
+    - [ ] Make sure the user has enough money to double/triple their bet
   - [ ] split()
     - [ ] Make sure the user has enough money to split their bet
     - [x] Split 1 hand into 2 hands
