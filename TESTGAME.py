@@ -7,7 +7,8 @@ import helperfunctions as hf
 from side_by_side import print_side_by_side
 import os
 from main import Lounge
-lounge = Lounge()
+# CHECK IF WINNING AND LOSING WITH D_D PICKS THE CORRECT RESULT AND APPLIES MULTIPLIER 
+# lounge = Lounge()
 
 # Highest card Unit test
 """ game = game.HighestCard()

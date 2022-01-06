@@ -54,7 +54,7 @@ class Lounge:
 
     def chooseGame(self, choice=2):
         option_list = self.output_table_names
-        option_list.extend(['View balance', 'View statistics'])
+        option_list.extend(['View balance', 'View statistics', 'Add funds'])
 
         while choice != 0:
             choice = hf.optionsMenu('What game would you like to play today?', option_list)
@@ -65,6 +65,8 @@ class Lounge:
                 self.checkBalance()
             elif choice == 5:
                 self.checkStats()
+            elif choice == 6:
+                self.addFunds()
 
     def checkBalance(self):
         hf.prettyPrint(f'Your balance is: {self.player.getCredits()} M-Bucks')
@@ -82,6 +84,9 @@ class Lounge:
         # Reset game variable
         game = None
 
+    # Super user function // Debug
+    def addFunds(self):
+        self.player.changeCredits(10000, 2, 'add')
 
 if __name__ == "__main__":
     lounge = Lounge()

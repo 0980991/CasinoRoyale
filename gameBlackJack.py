@@ -2,18 +2,20 @@ import helperfunctions as hf
 import side_by_side as sbs
 
 class Blackjack:
-    def __init__(self, deck, can_increase_bet):
-        self.deck             = deck
-        self.results          = []
-        self.player_win       = 0 # 0 Tied, 1 Win, 2 Lose
-        self.double_down      = [False, False]
-        self.dealer_hand      = [self.deck.pullRandomCard()]
-        self.player_hand_1    = self.deck.pull2RandomCards()
-        self.player_hand_1    = [[8, 'Hearts', ''], [8, 'Hearts', '']]
-        self.player_hand_2    = None  # This hand is created in the event of a split action.
-        self.current_hand_nr  = 1
-        self.can_increase_bet = can_increase_bet
-    ### Return [True/False, 'continue'/'quit', {multiplier}]
+    def __init__(self, deck, player_funds_and_bet):
+        self.deck                 = deck # Deck object
+        self.results              = []  # Per hand, keeps track whether the hand has won/lost
+        self.player_win           = 0  # 0 Tied, 1 Win, 2 Lose
+        self.split_flag           = False  # Has the player split?
+        self.double_down          = [False, False]  # Has the player d_d on first or second hand
+        self.dealer_hand          = [self.deck.pullRandomCard()] # List with dealer cards
+        self.player_hand_1        = self.deck.pull2RandomCards() # List with player cards
+        self.player_hand_1        = [[8, 'Hearts', ''], [8, 'Hearts', '']]
+        self.player_hand_2        = None  # This hand is created in the event of a split action.
+        self.current_hand_nr      = 1  # Keeps track of the current hand the player is playing
+        self.player_funds_and_bet = player_funds_and_bet  # Used to determine whether a player can d_d and/or split
+
+    # <func> Handles the main order of turns
     def start(self):
         self.playerMove(self.player_hand_1)
         # Player's 1st hand has busted
@@ -52,6 +54,7 @@ class Blackjack:
 
         return self.parseResults()
 
+    # <Void> Handles all of the actions during the player's turn
     def playerMove(self, player_hand):
         round_count = 1
         holding = False
@@ -77,18 +80,29 @@ class Blackjack:
 
             player_options = ['Hit', 'Hold']
 
-            # Is the player eligible to double down and/or split their cards?
-            if (round_count == 1) and (True not in self.double_down) and (self.can_increase_bet):
+            # Is the player eligible to double down?
+            can_bet = self.canBet()
+            CHECK1 = round_count == 1
+            CHECK2 = True not in self.double_down
+            CHECK3 = can_bet[1] if self.split_flag else can_bet[0]
+            if (round_count == 1) and (True not in self.double_down) and (can_bet[1] if self.split_flag else can_bet[0]):
                 player_options.append('Double down')
 
-                #  Does the player hold a pair?
-                if player_hand[0][0] == player_hand[1][0]:
-                    player_options.append('Split')
-                    split_flag = True
+            # Is the player eligible to split?
+            if (round_count == 1) and (player_hand[0][0] == player_hand[1][0]) and (not self.split_flag):
+                player_options.append('Split')
+
+
             round_count += 1
 
             #  Player chooses their move (see above)
             choice = hf.optionsMenu('What is your next move?', player_options)
+
+            if self.split_flag:
+                choice_option_nr = 3
+            else:
+                choice_option_nr = 4
+
             #  Hit
             if choice == 1:
                 player_hand.append(self.deck.pullRandomCard())
@@ -98,26 +112,33 @@ class Blackjack:
             #  Double down
             elif choice == 3:
                 self.double_down[self.current_hand_nr - 1] = True
-                self.double_down.append(True)
                 player_hand.append(self.deck.pullRandomCard())
                 if self.hasBusted(player_hand):
                     self.player_win = 2
                 else:
+                    hf.printBothHands(
+                                    [player_hand, self.dealer_hand],
+                                    [self.deck.sumCards(player_hand), self.deck.sumCards(self.dealer_hand)],
+                                    player_hand_nr
+                                    )
                     holding = True
-
             #  Split
-            elif choice == 4 and split_flag:
-                split_flag = False
+            elif choice == 4:
                 self.split()
+                round_count = 1
+
 
         hf.enterToContinue()
 
+    # <Void> Splits the player hand into 2 hands and appends a new card to each hand
     def split(self):
+        self.split_flag = True
         self.player_hand_2 = [self.player_hand_1[1]]
         self.player_hand_2.append(self.deck.pullRandomCard())
         self.player_hand_1.pop()
         self.player_hand_1.append(self.deck.pullRandomCard())
 
+    # <Void> Handles all of the actions during the dealers turn
     def dealerMove(self):
         self.dealer_hand.append(self.deck.pullRandomCard())
         while (not self.dealerHolds()):
@@ -137,18 +158,31 @@ class Blackjack:
 
         return
 
+    # <Bool[]>Check if a user can bet double/triple their bet (double down and/or split cards)
+    # Returns [can double, can triple]
+    def canBet(self):
+        bool_list = []
+        for i in range(2):
+            if self.player_funds_and_bet[0] > (self.player_funds_and_bet[1])*(i+2):
+                bool_list.append(True)
+            else:
+                bool_list.append(False)
+        return bool_list
+
+    # <Bool> Checks if the dealer has reached a soft 17
     def dealerHolds(self):
         if max(self.deck.sumCards(self.dealer_hand[:-1])) >= 17:
             return True
         return False
 
-    # Checks if lowest combination of card values > 21
+    # <Bool>Checks if lowest combination of card values > 21
     def hasBusted(self, hand):
         sums = self.deck.sumCards(hand)
         if min(sums) > 21:
             return True
         return False
 
+    # <Void> Compares 1 player and the dealer hand and updates self.results
     def compareHands(self, player_hand):
         player_scores = self.deck.sumCards(player_hand)
         dealer_scores = self.deck.sumCards(self.dealer_hand)
@@ -173,7 +207,10 @@ class Blackjack:
             self.results.append(True)
         return
 
+    # <[Bool, func, int]> Uses results and some other self.<variables> to determine whether the player wins or loses and whether their bet is multiplied
+    # Returns the end of game results. (Make sure to call this function from within a return statement)
     def parseResults(self):
+        multiplier = 0
         # Increase multiplier if player has doubled down
         if True in self.double_down:
             multiplier = 1
@@ -191,14 +228,11 @@ class Blackjack:
             else:
                 print('You lose')
 
-            if self.double_down:
-                return [self.results[0], hf.playAgain(), 2]
-            else:
-                return [self.results[0], hf.playAgain(), 1]
+            return [self.results[0], hf.playAgain(), 1 + multiplier]
+
 
         else:
             if self.results[0] == self.results[1] and None not in self.results:
-                multiplier = 0
                 if True in self.double_down:
                     multiplier = 1
                 # Won both hands
@@ -222,5 +256,12 @@ class Blackjack:
 
             # Player either (lose 1 and won 1) or (Both hands have the same value as the dealer)
             else:
-                print('You tied')
+                if True in self.double_down:
+                    d_d_index = self.double_down.index(True)
+                    if self.results[d_d_index]:
+                        print('You won')
+                    else:
+                        print('You lost')
+                    return [self.res ults[d_d_index], hf.playAgain(), 1]
+                print('You lost one and won the other hand, congratulations, you win nothing')
                 return [True, hf.playAgain(), 0]
