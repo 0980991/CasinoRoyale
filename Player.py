@@ -6,7 +6,7 @@ class Player:
     def __init__(self, *args):
         # Initializes new player
         if len(args) == 3: # args = username, password, credits
-            self.username = args[0][0]
+            self.username = args[0]
             self.credits = 1000
             # Create a database row with playername and starter credits
             db.establishConnection(f'INSERT INTO playerinfo VALUES ({hf.listToQuery([self.username, args[1], 1000])})', 'write')
@@ -77,8 +77,13 @@ class Player:
     def getStats(self, game_string):
         output = ''
         gamestat = self.statistics[game_string]
-        for stat in gamestat:
-            output += f'{stat}: {gamestat[stat]}\n'
+        for i, stat in enumerate(gamestat):
+            if i == len(gamestat) - 1:
+                s = gamestat[stat] / 100
+                str_stat = '{0:.2%}'.format(s)
+                output += f'{stat}: {str_stat}\n'
+            else:
+                output += f'{stat}: {gamestat[stat]}\n'
 
         return output
 

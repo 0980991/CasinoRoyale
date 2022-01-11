@@ -1,5 +1,7 @@
 import random as rd
 import helperfunctions as hf
+import os
+import time
 
 import tkinter
 import DbAPI as db
@@ -16,9 +18,17 @@ class Lobby:
     def initializeNewPlayer(self):
         available = False
         while not available:
-            username = input('Please enter your player name ')
+            username = input('Please enter your new player name\n').casefold()
+            # Restart program when the user has entered 'b'
+            if username == 'b':
+                os.system('python main.py')
+                time.sleep(2)
             available = self.verifyUsernameAvailability(username)
-        password = input('Please enter your password ')
+
+        password = input('Please enter your password\n')
+        if password == 'b':
+            os.system('python main.py')
+            time.sleep(2)
         # Create player object and assign it to the current player
         return Player(''.join(username), password, 1000)
 
@@ -26,7 +36,13 @@ class Lobby:
     def initializeExistingPlayer(self):
         user_exists = False
         while not user_exists:
-            user_credentials = hf.readUserInput(['What is your username?', 'What is your password?'])
+            user_credentials = hf.readUserInput(['Please enter the username of your existing account',
+                                                 'What is your password?'])
+            # Restart program when the user has entered 'b'
+            if user_credentials == []:
+                os.system('python main.py')
+                time.sleep(2)
+            user_credentials[0].casefold()
             if db.establishConnection(f'SELECT * FROM playerinfo WHERE username = "{user_credentials[0]}" AND password = "{user_credentials[1]}"', 'read') != []:
                 user_exists = True
 
@@ -58,6 +74,8 @@ class Lounge:
 
         while choice != 0:
             choice = hf.optionsMenu('What game would you like to play today?', option_list)
+            if choice == -1:
+                self.player = Lobby.initializeExistingPlayer()
 
             if choice in [1, 2, 3]:
                 self.joinTable(self.table_names[choice - 1])

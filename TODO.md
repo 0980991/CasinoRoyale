@@ -9,10 +9,10 @@ Games
 ------------------
 - [ ] Finish Blackjack
   - [ ] Add more decks to self.deck when instantiating Blackjack
-  - [ ] doubleDown()
-    - [ ] Make sure the user has enough money to double/triple their bet
-  - [ ] split()
-    - [ ] Make sure the user has enough money to split their bet
+  - [x] doubleDown()
+    - [x] Make sure the user has enough money to double/triple their bet
+  - [x] split()
+    - [**x**] Make sure the user has enough money to split their bet
     - [x] Split 1 hand into 2 hands
     - [x] Give player 2 turns when they split their cards
     - [x] Parse the results according to how many of the player's hands win/lose
@@ -27,7 +27,7 @@ Games
 
 Menu
 ------------------
-- [ ] Backwards navigation
+- [x] Backwards navigation
 - [ ] Catching faulty input
   - [x] Game class
     - [x] setOpponentAmount()

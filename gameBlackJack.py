@@ -10,7 +10,7 @@ class Blackjack:
         self.double_down          = [False, False]  # Has the player d_d on first or second hand
         self.dealer_hand          = [self.deck.pullRandomCard()] # List with dealer cards
         self.player_hand_1        = self.deck.pull2RandomCards() # List with player cards
-        self.player_hand_1        = [[8, 'Hearts', ''], [8, 'Hearts', '']]
+        # self.player_hand_1        = [[8, 'Hearts', ''], [8, 'Hearts', '']]
         self.player_hand_2        = None  # This hand is created in the event of a split action.
         self.current_hand_nr      = 1  # Keeps track of the current hand the player is playing
         self.player_funds_and_bet = player_funds_and_bet  # Used to determine whether a player can d_d and/or split
@@ -163,7 +163,7 @@ class Blackjack:
     def canBet(self):
         bool_list = []
         for i in range(2):
-            if self.player_funds_and_bet[0] > (self.player_funds_and_bet[1])*(i+2):
+            if self.player_funds_and_bet[0] >= (self.player_funds_and_bet[1])*(i+2):
                 bool_list.append(True)
             else:
                 bool_list.append(False)
@@ -262,6 +262,6 @@ class Blackjack:
                         print('You won')
                     else:
                         print('You lost')
-                    return [self.res ults[d_d_index], hf.playAgain(), 1]
+                    return [self.results[d_d_index], hf.playAgain(), 1]
                 print('You lost one and won the other hand, congratulations, you win nothing')
                 return [True, hf.playAgain(), 0]

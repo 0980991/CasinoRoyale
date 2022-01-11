@@ -49,7 +49,8 @@ def getColumnNames(table_name):
 
 ### Developer queries ###
 
-# establishConnection('DELETE FROM playerinfo WHERE username = "Joe"', 'write')
+# establishConnection('DELETE FROM playerinfo WHERE username = "u"', 'write')
+# establishConnection('DELETE FROM playerstats WHERE username = "u"', 'write')
 # establishConnection('DROP TABLE playerinfo', 'write')
 # establishConnection('DROP TABLE playerstats', 'write')
 # establishConnection('ALTER TABLE playerinfo ADD COLUMN "password VARCHAR(20)"')

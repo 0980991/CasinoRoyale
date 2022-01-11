@@ -37,16 +37,16 @@ def yesNoInput(question='', default_yes=True):
     return False
 
 def readUserInput(questionList):
-    userinput = []
+    user_input = []
     for i, question in enumerate(questionList):
-        userinput.append(input('(Press b to cancel)\n\n' + question + '\n')) ## The char escape functie zou hier aangeroepen kunnen worden
-        while userinput[i] == '':
+        user_input.append(input('(Press b to cancel)\n\n' + question + '\n')) ## The char escape functie zou hier aangeroepen kunnen worden
+        while user_input[i] == '':
             print('This field cannot be empty')
-            userinput.pop() # Removes the empty space added to list
-            userinput.append(input('(Press b to cancel)\n\n' + question + '\n'))
-        if userinput[i] == 'b':
+            user_input.pop() # Removes the empty space added to list
+            user_input.append(input('(Press b to cancel)\n\n' + question + '\n'))
+        if user_input[i] == 'b':
             return []
-    return userinput
+    return user_input
 
 def enterToContinue(message=''):
     input(message + '\nPlease press enter to continue...')
