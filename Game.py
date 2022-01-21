@@ -5,6 +5,7 @@ from Deck import Deck
 from Deck import BlackjackDeck as BJD
 from Dice import Dice
 from Player import Player
+from gameYahtzee import Yahtzee
 import helperfunctions as hf
 
 # Interface for all casino games
@@ -60,6 +61,11 @@ class Game:
                     sides = self.setDiceSides()
                     self.dice = Dice(sides)
                     results  = self.game_instance.start(self.dice, self.opponent_amt)
+
+                elif self.game_string == 'yahtzee':
+                    self.game_instance = Yahtzee()
+                    self.dice = Dice(6)
+                    results = self.game_instance.start(self.dice, self.opponent_amt, )
 
                 if results[0] is None:  # The game tied...Add 0 (Should never happen but in case it does, the game doesnt break)
                     self.current_bet = 0

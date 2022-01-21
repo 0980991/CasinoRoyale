@@ -1,7 +1,9 @@
 Add game/statistics to Player.py
 
-for player in db:
-    INSERT row player, 'new_game', 0, 0, 0, 0.0
+## Add empty stats to player stats
+players = establishConnection('SELECT username FROM playerinfo', 'read')
+for player in players:
+    establishConnection(f'INSERT into playerstats VALUES ({hf.listToQuery([player[0], "yahtzee", 0, 0, 0, 0.0])})', 'write')
 
 class Lounge:
     - Update table_names list

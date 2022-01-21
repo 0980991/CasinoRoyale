@@ -12,7 +12,7 @@ class Player:
             db.establishConnection(f'INSERT INTO playerinfo VALUES ({hf.listToQuery([self.username, args[1], 1000])})', 'write')
 
             # Fill database with stats for each game
-            for game in ['highestcard', 'blackjack', 'dicetoss']:
+            for game in ['highestcard', 'blackjack', 'dicetoss', 'yahtzee']:
                 db.establishConnection(f'INSERT INTO playerstats VALUES ({hf.listToQuery([self.username, game, 0, 0, 0, 0.0])})', 'write')
 
             # Local player statistics will always be imported from the DB and never altered from within the program to ensure the correct format

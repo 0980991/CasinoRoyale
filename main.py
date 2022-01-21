@@ -58,8 +58,8 @@ class Lobby:
 
 class Lounge:
     def __init__(self):
-        self.table_names = ['highestcard', 'blackjack', 'dicetoss']             # Used to identify game types
-        self.output_table_names = ['Highest Card', 'Blackjack', 'Dice Toss']    # Used to display game names on screen
+        self.table_names = ['highestcard', 'blackjack', 'dicetoss', 'yahtzee']             # Used to identify game types
+        self.output_table_names = ['Highest Card', 'Blackjack', 'Dice Toss', 'Yahtzee']    # Used to display game names on screen
 
         if not hf.yesNoInput('Do you have an existing account?'):
             self.player = Lobby.initializeNewPlayer()
