@@ -120,5 +120,21 @@ def printBothHands(hands, sums, player_hand_nr):
                 output[i] += f'\n{card[2]} of {card[1]}'
             else:
                 output[i] += f'\n{card[0]} of {card[1]}'
-    sbs.print_side_by_side(output[0] , output[1] )
+    sbs.print_side_by_side(output[0] , output[1])
     print('\n')
+
+def printDiceSideBySide(*dice_list):
+    output = ''
+    l = []
+    new_line_list = []
+    for die in dice_list:
+        line_list = die.split('\n')
+        line_list.pop()
+        l.append(line_list)
+    new = [list(row) for row in zip(*l)]
+    for line in new:
+        line = [f'{str_elem}\t' for str_elem in line]
+        output += ''.join(line)
+        output += '\n'
+    print(output)
+    return

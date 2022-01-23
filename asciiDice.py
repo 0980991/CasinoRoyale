@@ -51,12 +51,12 @@ class AsciiDice:
 
     def getDice(self, number):
         if number > len(self.dice):
-            totalspaces = (9 - len(str(number)))
-            spaces = ' ' * (int(totalspaces/2) - 1)
-            if totalspaces % 2 != 0:
-                intdice = f'I---------I\n|{9* " "}|\n|{spaces}-{str(number)}-{spaces} |\n|{9* " "}|\nI---------I\n'
+            total_spaces = (9 - len(str(number)))
+            spaces = ' ' * (int(total_spaces/2) - 1)
+            if total_spaces % 2 != 0:
+                int_dice = f'I---------I\n|{9* " "}|\n|{spaces}-{str(number)}-{spaces} |\n|{9* " "}|\nI---------I\n'
             else:
-                intdice = f'I---------I\n|{9* " "}|\n|{spaces}-{str(number)}-{spaces}|\n|{9* " "}|\nI---------I\n'
+                int_dice = f'I---------I\n|{9* " "}|\n|{spaces}-{str(number)}-{spaces}|\n|{9* " "}|\nI---------I\n'
 
 #            'I---------I'  Dice will look something like this if number > 9
 #            '|         |'
@@ -64,6 +64,6 @@ class AsciiDice:
 #            '|         |'
 #            'I---------I'
 
-            return intdice
+            return int_dice
         else:
             return self.dice[number-1]
