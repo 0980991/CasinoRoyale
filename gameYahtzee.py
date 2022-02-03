@@ -5,11 +5,15 @@ from Dice import Dice
 
 class Yahtzee:
     def __init__(self, dice, opponent_amt):
-        self.dice            = Dice(6)
-        self.ad              = AsciiDice()
-        self.opponent_amt    = opponent_amt
-        self.player_scores   = []
-        self.nr_yahtzee_cols = 0
+        self.dice              = Dice(6)
+        self.ad                = AsciiDice()
+        self.opponent_amt      = opponent_amt
+        self.scores_keys       = ['1', '2', '3', '4', '5', '5', '6',
+                                  '3 of a Kind', '4 of a Kind', 'Full House',
+                                  'Small Street', 'Large Street', 'Yahtzee', 'Chance']
+        self.current_player    = 0  # Works as index for accessign current player scores
+        self.nr_yahtzee_cols   = 0
+        self.all_player_scores = []
 
     def start(self):
         if not self.setNrYahtzeeCols():
@@ -19,6 +23,7 @@ class Yahtzee:
         round = 0
         while not quitting and round < (13 * self.nr_yahtzee_cols):
             self.playerTurn()
+            self.current_player = (self.current_player + 1) % self.opponent_amt 
             round += 1
 
     def playerTurn(self):
@@ -36,12 +41,20 @@ class Yahtzee:
                 curr_saved_dice = self.saveDice(roll_values)
                 nr_of_dice -= len(curr_saved_dice)
                 saved_dice.append(curr_saved_dice)
-                if nr_of_dice != 0:
+                if nr_of_dice == 0:
                     break
 
-            if next_move == 2:
+            elif next_move == 2:
                 continue
 
+            elif next_move == 3:
+                hf.enterToContinue(self.getPlayerScores())
+
+    def getPlayerScores(self):
+        player_scores = self.all_player_scores[self.current_player]
+        scores_list = [list(col.values()) for col in player_scores]
+        print(hf.nestedStringArrToStrTable(scores_list, self.scores_keys))
+        return hf.appendMultiRowStrings(scores_list)
 
     def rollDice(self, nr_of_dice):
         roll_values = []
@@ -49,7 +62,7 @@ class Yahtzee:
         for i in range(nr_of_dice):
             roll_values.append(self.dice.roll())
             dice_list.append(self.ad.getDice(roll_values[i]))
-        hf.printDiceSideBySide(*dice_list)
+        hf.printDiceSideBySide(dice_list)
         return roll_values
 
     def saveDice(self, roll_values):
@@ -62,24 +75,21 @@ class Yahtzee:
         return r
 
     def setNrYahtzeeCols(self):
-        nr_yahtzee_cols = 0
-        while nr_yahtzee_cols <= 0:
-            print('How many columns would you like your game to be?\n')
-            nr_yahtzee_cols = input('Your must enter a value greater than 0:\n')
-            if nr_yahtzee_cols == 'b':
-                return False
-            try:
-                nr_yahtzee_cols = int(nr_yahtzee_cols)
-            except ValueError:
-                print(f'You must enter an integer value greater than 0:')
+        nr_yahtzee_cols = 3
+        #while nr_yahtzee_cols <= 0:
+        #    print('How many columns would you like your game to be?\n')
+        #    nr_yahtzee_cols = input('Your must enter a value greater than 0:\n')
+        #    if nr_yahtzee_cols == 'b':
+        #        return False
+        #    try:
+        #        nr_yahtzee_cols = int(nr_yahtzee_cols)
+        #    except ValueError:
+        #        print(f'You must enter an integer value greater than 0:')
         self.nr_yahtzee_cols = nr_yahtzee_cols
         for player_nr in range(self.opponent_amt + 1):
-            self.player_scores.append([])
-            for col_nr in range (nr_yahtzee_cols):
-                self.player_scores[player_nr].append(dict.fromkeys(
-                                                        ['1', '2', '3', '4', '5', '5', '6',
-                                                        '3_of_a_kind', '4_of_a_kind', 'full_house',
-                                                        'small_street', 'large_street', 'yahtzee', 'chance'], 0
+            self.all_player_scores.append([])
+            for col_nr in range(nr_yahtzee_cols):
+                self.all_player_scores[player_nr].append(dict.fromkeys(self.scores_keys, 0
                                                         )
                                                     )
         '''

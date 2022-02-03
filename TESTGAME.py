@@ -11,7 +11,13 @@ from main import Lounge
 from DbAPI import *
 import gameYahtzee as gy
 
-# CHECK IF WINNING AND LOSING WITH D_D PICKS THE CORRECT RESULT AND APPLIES MULTIPLIER
+l = [
+        ['a', 'b'],
+        ['d', 'c'],
+        ['e', 'f']
+    ]
+
+print(hf.nestedStringArrToStrTable(l))
 die = dice.Dice(6)
 y = gy.Yahtzee(die, 3)
 y.start()

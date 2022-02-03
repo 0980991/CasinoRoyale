@@ -1,4 +1,5 @@
 import os
+from numpy import append
 import side_by_side as sbs
 from Deck import Deck
 
@@ -86,7 +87,46 @@ def prettyString(msg):
 def prettyPrint(msg):
     print(prettyString(msg))
 
+def appendStrings(list_of_strings, divider='|'):
+    output = ''
+    for string in list_of_strings:
+        output += str(string) + divider
+    return output
 
+def appendMultiRowStrings(list_of_string_lists, divider='  |  ', divider_margin=2):
+    divider = f'{divider_margin * " "}{divider}{divider_margin * " "}'
+    inverted_list = [list(row) for row in zip(*list_of_string_lists)]
+    output = ''
+    for string_list in inverted_list:
+        output += f'{appendStrings(string_list, divider)}\n'
+    return output
+
+def nestedStringArrToStrTable(list_of_string_lists, row_titles=None, col_titles=None):
+    if col_titles is None:
+        max_nr_of_cols = len(list_of_string_lists)
+        col_titles = [str(i) for i in range(max_nr_of_cols+1)]
+    if row_titles is None:
+        row_titles = [str(i+1) for i in range(len(list_of_string_lists)-1)]
+        # row_titles.pop()
+
+    list_of_string_lists.insert(0, row_titles)
+    for i, title in enumerate(col_titles):
+        list_of_string_lists[i].insert(0, title)
+    mls = separateRows(list_of_string_lists)
+    mls = appendMultiRowStrings(mls, '')
+    return mls
+
+def separateRows(list_of_string_lists):
+    l = list_of_string_lists
+    [l.insert(i, [' | ']*len(l)) for i in range(len(l)) if i % 2 == 0]
+    [l[i].insert(j, '-'*len(l[i])) for i, string_list in enumerate(list_of_string_lists) for j, string in enumerate(string_list)]
+    for i, string_list in enumerate(l):
+        if i % 2 == 0:
+            l.insert(i, '=')
+        for j, string in enumerate(string_list):
+            if j % 2 == 0:
+                string_list.insert(j, '=')
+    return l
 #### Specifically catered to this project ####
 def playAgain(): # returns a boolean
     enterToContinue()
@@ -123,7 +163,7 @@ def printBothHands(hands, sums, player_hand_nr):
     sbs.print_side_by_side(output[0] , output[1])
     print('\n')
 
-def printDiceSideBySide(*dice_list):
+def printDiceSideBySide(dice_list):
     output = ''
     l = []
     new_line_list = []
@@ -131,10 +171,7 @@ def printDiceSideBySide(*dice_list):
         line_list = die.split('\n')
         line_list.pop()
         l.append(line_list)
-    new = [list(row) for row in zip(*l)]
-    for line in new:
-        line = [f'{str_elem}\t' for str_elem in line]
-        output += ''.join(line)
-        output += '\n'
+    output = appendMultiRowStrings(l)
+    os.system('cls')
     print(output)
     return
