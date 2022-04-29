@@ -87,7 +87,7 @@ def prettyString(msg):
 def prettyPrint(msg):
     print(prettyString(msg))
 
-def appendStrings(list_of_strings, divider='|'):
+def appendStrings(list_of_strings, divider='|', left_border='|'):
     output = ''
     for string in list_of_strings:
         output += str(string) + divider
@@ -102,6 +102,7 @@ def appendMultiRowStrings(list_of_string_lists, divider='  |  ', divider_margin=
     return output
 
 def nestedStringArrToStrTable(list_of_string_lists, row_titles=None, col_titles=None):
+    return_string = ''
     if col_titles is None:
         max_nr_of_cols = len(list_of_string_lists)
         col_titles = [str(i) for i in range(max_nr_of_cols+1)]
@@ -109,24 +110,34 @@ def nestedStringArrToStrTable(list_of_string_lists, row_titles=None, col_titles=
         row_titles = [str(i+1) for i in range(len(list_of_string_lists)-1)]
         # row_titles.pop()
 
+    title_col_length = len(max(row_titles))
+    title_row_length = len(max(col_titles))
+
     list_of_string_lists.insert(0, row_titles)
     for i, title in enumerate(col_titles):
         list_of_string_lists[i].insert(0, title)
+        return_string += separateRows(list_of_string_lists[i], title_col_length, title_row_length)
+    '''
     mls = separateRows(list_of_string_lists)
     mls = appendMultiRowStrings(mls, '')
     return mls
+    '''
 
-def separateRows(list_of_string_lists):
-    l = list_of_string_lists
-    [l.insert(i, [' | ']*len(l)) for i in range(len(l)) if i % 2 == 0]
-    [l[i].insert(j, '-'*len(l[i])) for i, string_list in enumerate(list_of_string_lists) for j, string in enumerate(string_list)]
-    for i, string_list in enumerate(l):
-        if i % 2 == 0:
-            l.insert(i, '=')
-        for j, string in enumerate(string_list):
-            if j % 2 == 0:
-                string_list.insert(j, '=')
-    return l
+def separateRows(string_list, title_col_length, title_row_length):
+    row = ''
+    for string in string_list:
+        row += f'+ {(title_col_length*3)*"-"} '
+    row += '+\n'
+    for i, string in enumerate(string_list):
+        if i == 0:
+            row += '|  '
+        row += string
+        row += f'{title_row_length*" "}|  '
+        margin = int(((title_row_length + 4) - len(string)) / 2)
+        # row += f'{(margin-1)*" "}{string}{margin*" "}|'
+    print(row)
+    return row
+
 #### Specifically catered to this project ####
 def playAgain(): # returns a boolean
     enterToContinue()
@@ -163,15 +174,16 @@ def printBothHands(hands, sums, player_hand_nr):
     sbs.print_side_by_side(output[0] , output[1])
     print('\n')
 
-def printDiceSideBySide(dice_list):
+def printListSideBySide(string_list):
     output = ''
     l = []
-    new_line_list = []
-    for die in dice_list:
-        line_list = die.split('\n')
+    line_list = []
+    for item in string_list:
+        if '\n' in item:
+            line_list = item.split('\n')
         line_list.pop()
         l.append(line_list)
     output = appendMultiRowStrings(l)
-    os.system('cls')
+    # os.system('cls')
     print(output)
     return

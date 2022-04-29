@@ -1,17 +1,25 @@
+from audioop import reverse
 import copy as copy
 import random as r
 import numpy as np
+import helperfunctions as hf
+from operator import itemgetter
 
 class Deck:
-    def __init__(self):
+    def __init__(self, add_jokers=False):
         self.suits = ["Hearts", "Diamonds", "Spades", "Clubs"]           # Hearts, Diamonds, Spades, Clubs
         self.deck = []
+        self.add_jokers = add_jokers
 
     # Fills empty deck with 52 cards and shuffles them accordingly
     def fillDeck(self):
         for suit in range(4):
             for value in range(2, 15):
                 self.deck.append([value, self.suits[suit]])
+
+        if self.add_jokers:
+            self.deck.extend([[15, 'Joker'], [15, 'Joker']] )
+
         self.deck = self.shuffle()
 
     # Shuffles the deck using random.sample()
@@ -31,9 +39,48 @@ class Deck:
         for card in self.deck:
             self.printCard(card)
 
+    # Sorts the hand in orsder
+         # asc  -> Ascending
+         # desc -> Descending
+    def sortHand(self, hand, order='asc', sort_suits=False):
+        if order == 'asc':
+            sorted_hand = sorted(hand, key=itemgetter(0))
+        elif order == 'desc':
+            sorted_hand = sorted(hand, key=itemgetter(0), reverse=True)
+
+        return sorted_hand
+
     # Prints a card
-    def printCard(self, card):
-        print(f'{self.valueToRank(card[0])} of {card[1]}')
+    def printCards(self, cards, horizontal=True):
+        card_strings = self.formatCards(cards)
+        print(cards)
+        """
+        for card in cards:
+            card_strings.append(f'{self.valueToRank(card[0])} of {card[1]}')
+        if horizontal:
+            print(' | '.join(card_strings))
+        else:
+            for card in card_strings:
+                print(card)
+         """
+
+    # Format card list to string
+    def formatCards(self, cards):
+        card_strings = []
+        for card in cards:
+            card_strings.append(f'{self.valueToRank(card[0])} of {card[1]}')
+        return ' | '.join(card_strings)
+
+    # Pulls a number of random cards
+    def XpullRandomCards(self, number_of_cards, sort=True):
+        hand = []
+        if self.getLength() > 0 and number_of_cards < self.getLength():
+            for card_nr in range(number_of_cards):
+                card = r.choice(self.deck)
+                hand.append(card)
+                self.removeCard(self.deck.index(card))
+            return self.sortHand(hand)
+        self.fillDeck()
 
     # Pulls a random card from the deck
     def pullRandomCard(self):

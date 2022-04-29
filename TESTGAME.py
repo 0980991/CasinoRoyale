@@ -1,5 +1,5 @@
-import side_by_side
 import gameHighestCard as game
+import gameShithead as gsh
 import Deck as deck
 import Dice as dice
 import Game as g
@@ -16,8 +16,11 @@ l = [
         ['d', 'c'],
         ['e', 'f']
     ]
+s = ''
 
-print(hf.nestedStringArrToStrTable(l))
+shithead = gsh.Shithead(deck.Deck(True), 1)
+shithead.start()
+
 die = dice.Dice(6)
 y = gy.Yahtzee(die, 3)
 y.start()

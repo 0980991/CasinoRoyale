@@ -7,6 +7,7 @@ class Yahtzee:
     def __init__(self, dice, opponent_amt):
         self.dice              = Dice(6)
         self.ad                = AsciiDice()
+        self.quitting          = False
         self.opponent_amt      = opponent_amt
         self.scores_keys       = ['1', '2', '3', '4', '5', '5', '6',
                                   '3 of a Kind', '4 of a Kind', 'Full House',
@@ -19,22 +20,22 @@ class Yahtzee:
         if not self.setNrYahtzeeCols():
             return
 
-        quitting = False
         round = 0
-        while not quitting and round < (13 * self.nr_yahtzee_cols):
+        while not self.quitting and round < (13 * self.nr_yahtzee_cols):
             self.playerTurn()
-            self.current_player = (self.current_player + 1) % self.opponent_amt 
+            self.current_player = (self.current_player + 1) % self.opponent_amt
             round += 1
+        if self.quitting:
+            return [False, hf.playAgain()]
 
     def playerTurn(self):
         roll_nr = 0
         nr_of_dice = 5
         saved_dice = []
         turn_active = True
+        roll_values = self.rollDice(nr_of_dice)
         while roll_nr < 3 and turn_active:
-            roll_nr += 1
-            roll_values = self.rollDice(nr_of_dice)
-            next_move = hf.optionsMenu(f'What is your next move?\nCurrent roll:{roll_nr}',
+            next_move = hf.optionsMenu(f'What is your next move?\nCurrent roll: {roll_nr}',
                                        ['Save dice', 'Roll', 'View your current scores', 'End turn', 'Quit'])
 
             if next_move == 1:
@@ -45,16 +46,29 @@ class Yahtzee:
                     break
 
             elif next_move == 2:
+                roll_nr += 1
                 continue
 
             elif next_move == 3:
                 hf.enterToContinue(self.getPlayerScores())
 
+            elif next_move == 4:
+                roll_nr = 3
+                break
+
+            elif next_move == 5:
+                player_quits = hf.yesNoInput('Are you sure you want to quit? You will lose your bet.')
+                if player_quits:
+
+                    return
     def getPlayerScores(self):
         player_scores = self.all_player_scores[self.current_player]
         scores_list = [list(col.values()) for col in player_scores]
-        print(hf.nestedStringArrToStrTable(scores_list, self.scores_keys))
-        return hf.appendMultiRowStrings(scores_list)
+        # print(hf.nestedStringArrToStrTable(scores_list, self.scores_keys))
+        score_string = ''
+        for score in scores_list:
+            score_string += f'{score} '
+        return score_string
 
     def rollDice(self, nr_of_dice):
         roll_values = []
@@ -62,7 +76,8 @@ class Yahtzee:
         for i in range(nr_of_dice):
             roll_values.append(self.dice.roll())
             dice_list.append(self.ad.getDice(roll_values[i]))
-        hf.printDiceSideBySide(dice_list)
+        dice_list.sort()
+        hf.printListSideBySide(dice_list)
         return roll_values
 
     def saveDice(self, roll_values):
