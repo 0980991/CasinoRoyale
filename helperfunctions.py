@@ -80,7 +80,7 @@ def dbOutputToList(listoftuples):
     return listoftuples
 
 def prettyString(msg):
-    output = f'{6*"*"}{(len(msg)*"*")}\n|  {msg}  |\n{6*"*"}{(len(msg)*"*")}'
+    output = f'{6*"*"}{(len(msg)*"*")}\n|  {msg}  |\n{6*"*"}{(len(msg)*"*")}\n'
     return output
 
 # Prints a box of characters around a string of any length
@@ -151,9 +151,15 @@ def handleOutcome(outcome):
     prettyPrint(outcome[2])
     return [outcome[0], outcome[1]]
 
-def printHand(blackjack_hand): # returns nothing
-    for i in range(len(blackjack_hand)):
-        prettyPrint(f'{Deck().valueToRank(blackjack_hand[i][0])} of {blackjack_hand[i][1]}')
+def stringHand(hand):
+    str_hand = ''
+    for i in range(len(hand)):
+        str_hand += prettyString(f'{Deck().valueToRank(hand[i][0])} of {hand[i][1]}')
+    return str_hand
+
+def printHand(str_hand): # returns nothing
+    for i in range(len(hand)):
+        prettyPrint(f'{Deck().valueToRank(hand[i][0])} of {hand[i][1]}')
 
     enterToContinue()
 

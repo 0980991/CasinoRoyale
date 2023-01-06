@@ -17,13 +17,12 @@ l = [
         ['e', 'f']
     ]
 s = ''
-
 shithead = gsh.Shithead(deck.Deck(True), 1)
 shithead.start()
 
-die = dice.Dice(6)
-y = gy.Yahtzee(die, 3)
-y.start()
+# die = dice.Dice(6)
+# y = gy.Yahtzee(die, 3)
+# y.start()
 # lounge = Lounge()
 # Highest card Unit test
 """ game = game.HighestCard()

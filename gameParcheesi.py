@@ -19,10 +19,10 @@ class gameParcheesi:
         #
         #
         #
-        #   - 28 End base tiles
+        #   - 28 End base tiles3
         #       - 7 per player
         # Game modes:
-        # 1v1 --> Opponent start square = 
+        # 1v1 --> Opponent start square
 
     def initPlayers(self, nr_players):
         nr_opp = nr_players - 1
